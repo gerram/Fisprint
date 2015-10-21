@@ -15,6 +15,8 @@
 		175096121BD7B6B00055AFE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 175096101BD7B6B00055AFE0 /* LaunchScreen.storyboard */; };
 		1750961D1BD7B6B00055AFE0 /* FisprintTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1750961C1BD7B6B00055AFE0 /* FisprintTests.m */; };
 		175096281BD7B6B00055AFE0 /* FisprintUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096271BD7B6B00055AFE0 /* FisprintUITests.m */; };
+		175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096361BD7BE030055AFE0 /* MERBaseCommands.m */; settings = {ASSET_TAGS = (); }; };
+		1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		175096231BD7B6B00055AFE0 /* FisprintUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FisprintUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		175096271BD7B6B00055AFE0 /* FisprintUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FisprintUITests.m; sourceTree = "<group>"; };
 		175096291BD7B6B00055AFE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		175096351BD7BE030055AFE0 /* MERBaseCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERBaseCommands.h; sourceTree = "<group>"; };
+		175096361BD7BE030055AFE0 /* MERBaseCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERBaseCommands.m; sourceTree = "<group>"; };
+		175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERSaleTransactionCommands.h; sourceTree = "<group>"; };
+		1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERSaleTransactionCommands.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,8 +107,7 @@
 		175096011BD7B6B00055AFE0 /* Fisprint */ = {
 			isa = PBXGroup;
 			children = (
-				175096051BD7B6B00055AFE0 /* AppDelegate.h */,
-				175096061BD7B6B00055AFE0 /* AppDelegate.m */,
+				175096381BD7BE120055AFE0 /* Commands */,
 				175096081BD7B6B00055AFE0 /* ViewController.h */,
 				175096091BD7B6B00055AFE0 /* ViewController.m */,
 				1750960B1BD7B6B00055AFE0 /* Main.storyboard */,
@@ -117,6 +122,8 @@
 		175096021BD7B6B00055AFE0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				175096051BD7B6B00055AFE0 /* AppDelegate.h */,
+				175096061BD7B6B00055AFE0 /* AppDelegate.m */,
 				175096031BD7B6B00055AFE0 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -138,6 +145,17 @@
 				175096291BD7B6B00055AFE0 /* Info.plist */,
 			);
 			path = FisprintUITests;
+			sourceTree = "<group>";
+		};
+		175096381BD7BE120055AFE0 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				175096351BD7BE030055AFE0 /* MERBaseCommands.h */,
+				175096361BD7BE030055AFE0 /* MERBaseCommands.m */,
+				175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */,
+				1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */,
+			);
+			name = Commands;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +292,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1750960A1BD7B6B00055AFE0 /* ViewController.m in Sources */,
+				1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */,
+				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,
 				175096041BD7B6B00055AFE0 /* main.m in Sources */,
 			);
