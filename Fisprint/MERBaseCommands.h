@@ -16,6 +16,10 @@
 #define SEP     0x00 // separator
 #define LF      0x0A // separator
 
+#define ESC_MFB ESC+MFB // start line
+#define ESC_MFE (<#args#>)
+
+
 @interface MERBaseCommands : NSObject
 
 @end

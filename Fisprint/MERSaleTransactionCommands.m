@@ -21,6 +21,8 @@
     ACK
      */
     
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    
     return [NSData dataWithBytes:NULL length:0];
 }
 
