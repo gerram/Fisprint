@@ -10,7 +10,7 @@
 
 @implementation MERSaleTransactionCommands
 
-- (NSData *)openReceiptOrInvoce:(NSString *)source
+- (NSData *)openReceiptOrInvoce:(NSString *)invoceNumber
 {
     /*
     4.3.1 Open Receipt / Invoice
@@ -25,7 +25,10 @@
 }
 
 
-- (NSData *)salesTransactionLine:(NSString *)source
+- (NSData *)salesTransactionLine:(NSString *)itemName
+                        comment1:(NSString *)comment1
+                        comment2:(NSString *)comment2
+                        comment3:(NSString *)comment3
 {
     /*
     4.3.2 Sales transaction line
@@ -46,7 +49,7 @@
 }
 
 
-- (NSData *)discountComment:(NSString *)source
+- (NSData *)discountComment:(NSString *)text
 {
     /*
     4.3.3 Discount comment
@@ -61,7 +64,10 @@
 }
 
 
-- (NSData *)voidItemSale:(NSString *)source
+- (NSData *)voidItemSale:(NSString *)itemName
+                 comment:(NSString *)comment
+                   value:(NSInteger)value
+                     vat:(NSString *)vat
 {
    /*
    4.3.4 Void item sale
@@ -76,7 +82,11 @@
 }
 
 
-- (NSData *)amountDiscountOrUpliftOnItemSale:(NSString *)source
+- (NSData *)amountDiscountOrUpliftOnItemSale:(NSString *)itemName
+                                applyCorrect:(NSString *)apply_correct
+                              discountAplift:(NSString *)discount_uplift
+                                       value:(NSNumber *)value
+                                         vat:(NSString *)vat
 {
    /*
    4.3.5 Amount discount or uplift on item sale
@@ -93,7 +103,7 @@
 }
 
 
-- (NSData *)transactionSubtotal:(NSString *)source
+- (NSData *)transactionSubtotal:(NSNumber *)subtotal
 {
     /*
     4.3.6 Transaction Subtotal
@@ -108,7 +118,8 @@
 }
 
 
-- (NSData *)percentageDiscountOrUpliftOnSubtotal:(NSString *)source
+- (NSData *)percentageDiscountOrUpliftOnSubtotal:(NSString *)discount_uplift
+                                         percent:(NSString *)percent
 {
     /*
     4.3.7 Percentage discount or uplift on subtotal.
@@ -123,7 +134,10 @@
 }
 
 
-- (NSData *)amountDiscountOrUpliftOnSubtotal:(NSString *)source
+- (NSData *)amountDiscountOrUpliftOnSubtotal:(NSString *)discount_uplift
+                                    amountAG:(NSArray *)amountAG
+                              correctionFlag:(NSString *)correctionFlag
+                                 totalAmount:(NSNumber *)totalAmount
 {
     /*
     4.3.8 Amount Discount / Uplift On Subtotal
@@ -142,7 +156,8 @@
 }
 
 
-- (NSData *)readingDivisionOfDiscountOrUpliftAmountToSum:(NSString *)source
+- (NSData *)readingDivisionOfDiscountOrUpliftAmountToSum:(NSString *)discount_uplift
+                                                  amount:(NSNumber *)amount
 {
     /*
     4.3.9 Reading division of discount/uplift amount to sum
@@ -159,7 +174,7 @@
 }
 
 
-- (NSData *)transactionTotal:(NSString *)source
+- (NSData *)transactionTotal:(NSNumber *)total
 {
     /*
     4.3.10 Transaction total
@@ -173,23 +188,22 @@
     return [NSData dataWithBytes:NULL length:0];
 }
 
-
-- (NSData *)receiptOrInvoiceFooter:(NSString *)source
-{
-    /*
-    4.3.11 Receipt / Invoice footer
-    Format:
-    ESC MFB R ['+'] <index> <parameter> [LF <parameter>] ESC MFE
-    Example:
-    ESC MFB 'RA100.00' ESC MFE
-    ACK
-    ESC MFB 'RB99.00' ESC MFE
-    ACK
-    ESC MFB 'RyZapraszamy ponownie !' ESC MFE
-    ACK
-     */
-    
-    return [NSData dataWithBytes:NULL length:0];
-}
+//- (NSData *)receiptOrInvoiceFooter:(NSString *)source
+//{
+//    /*
+//    4.3.11 Receipt / Invoice footer
+//    Format:
+//    ESC MFB R ['+'] <index> <parameter> [LF <parameter>] ESC MFE
+//    Example:
+//    ESC MFB 'RA100.00' ESC MFE
+//    ACK
+//    ESC MFB 'RB99.00' ESC MFE
+//    ACK
+//    ESC MFB 'RyZapraszamy ponownie !' ESC MFE
+//    ACK
+//     */
+//    
+//    return [NSData dataWithBytes:NULL length:0];
+//}
 
 @end
