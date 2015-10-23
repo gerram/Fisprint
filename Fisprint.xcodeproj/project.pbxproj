@@ -17,6 +17,7 @@
 		175096281BD7B6B00055AFE0 /* FisprintUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096271BD7B6B00055AFE0 /* FisprintUITests.m */; };
 		175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096361BD7BE030055AFE0 /* MERBaseCommands.m */; settings = {ASSET_TAGS = (); }; };
 		1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */; settings = {ASSET_TAGS = (); }; };
+		17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F41BBB1BDA570600EC2655 /* MERErrors.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		175096361BD7BE030055AFE0 /* MERBaseCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERBaseCommands.m; sourceTree = "<group>"; };
 		175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERSaleTransactionCommands.h; sourceTree = "<group>"; };
 		1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERSaleTransactionCommands.m; sourceTree = "<group>"; };
+		17F41BBA1BDA570600EC2655 /* MERErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERErrors.h; sourceTree = "<group>"; };
+		17F41BBB1BDA570600EC2655 /* MERErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERErrors.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +157,8 @@
 				175096361BD7BE030055AFE0 /* MERBaseCommands.m */,
 				175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */,
 				1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */,
+				17F41BBA1BDA570600EC2655 /* MERErrors.h */,
+				17F41BBB1BDA570600EC2655 /* MERErrors.m */,
 			);
 			name = Commands;
 			sourceTree = "<group>";
@@ -296,6 +301,7 @@
 				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,
 				175096041BD7B6B00055AFE0 /* main.m in Sources */,
+				17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +527,7 @@
 				1750962E1BD7B6B00055AFE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1750962F1BD7B6B00055AFE0 /* Build configuration list for PBXNativeTarget "FisprintTests" */ = {
 			isa = XCConfigurationList;
@@ -529,6 +536,7 @@
 				175096311BD7B6B00055AFE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		175096321BD7B6B00055AFE0 /* Build configuration list for PBXNativeTarget "FisprintUITests" */ = {
 			isa = XCConfigurationList;
@@ -537,6 +545,7 @@
 				175096341BD7B6B00055AFE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

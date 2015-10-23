@@ -7,10 +7,12 @@
 //
 
 #import "MERSaleTransactionCommands.h"
+#import "MERErrors.h"
 
 @implementation MERSaleTransactionCommands
 
 - (NSData *)openReceiptOrInvoce:(NSString *)invoceNumber
+                          error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.1 Open Receipt / Invoice
@@ -31,6 +33,7 @@
                         comment1:(NSString *)comment1
                         comment2:(NSString *)comment2
                         comment3:(NSString *)comment3
+                           error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.2 Sales transaction line
@@ -52,6 +55,7 @@
 
 
 - (NSData *)discountComment:(NSString *)text
+                      error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.3 Discount comment
@@ -70,6 +74,7 @@
                  comment:(NSString *)comment
                    value:(NSInteger)value
                      vat:(NSString *)vat
+                   error:(NSError *__autoreleasing *)error
 {
    /*
    4.3.4 Void item sale
@@ -89,6 +94,7 @@
                               discountAplift:(NSString *)discount_uplift
                                        value:(NSNumber *)value
                                          vat:(NSString *)vat
+                                       error:(NSError *__autoreleasing *)error
 {
    /*
    4.3.5 Amount discount or uplift on item sale
@@ -106,6 +112,7 @@
 
 
 - (NSData *)transactionSubtotal:(NSNumber *)subtotal
+                          error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.6 Transaction Subtotal
@@ -122,6 +129,7 @@
 
 - (NSData *)percentageDiscountOrUpliftOnSubtotal:(NSString *)discount_uplift
                                          percent:(NSString *)percent
+                                           error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.7 Percentage discount or uplift on subtotal.
@@ -140,6 +148,7 @@
                                     amountAG:(NSArray *)amountAG
                               correctionFlag:(NSString *)correctionFlag
                                  totalAmount:(NSNumber *)totalAmount
+                                       error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.8 Amount Discount / Uplift On Subtotal
@@ -160,6 +169,7 @@
 
 - (NSData *)readingDivisionOfDiscountOrUpliftAmountToSum:(NSString *)discount_uplift
                                                   amount:(NSNumber *)amount
+                                                   error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.9 Reading division of discount/uplift amount to sum
@@ -177,6 +187,7 @@
 
 
 - (NSData *)transactionTotal:(NSNumber *)total
+                       error:(NSError *__autoreleasing *)error
 {
     /*
     4.3.10 Transaction total
