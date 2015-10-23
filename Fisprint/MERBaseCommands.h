@@ -16,10 +16,13 @@
 #define SEP     0x00 // separator
 #define LF      0x0A // separator
 
-#define ESC_MFB ESC+MFB // the start of line
-#define ESC_MFE ESC+MFE // the end of line
+#define CR      0x0D // !!! (this is not from docs) !!! carriage return
 
 
 @interface MERBaseCommands : NSObject
+
+- (NSData *)prefixLineData;
+- (NSData *)postfixLineData;
+- (NSData *)returnLineData;
 
 @end

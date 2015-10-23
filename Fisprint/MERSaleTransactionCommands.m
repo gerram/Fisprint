@@ -11,6 +11,9 @@
 
 @implementation MERSaleTransactionCommands
 
+
+
+
 - (NSData *)openReceiptOrInvoce:(NSString *)invoceNumber
                           error:(NSError *__autoreleasing *)error
 {
@@ -24,6 +27,16 @@
      */
     
     NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    NSString *C = @"C";
+    [resultData appendBytes:&C length:sizeof(C)];
+    
+#pragma TODO: !!! check via right parser (invoceNumber)
+    
+    if (invoceNumber) {
+        [resultData appendBytes:&invoceNumber length:sizeof(resultData)];
+    }
+    [resultData appendData:[self postfixLineData]];
     
     return [NSData dataWithBytes:NULL length:0];
 }
@@ -49,6 +62,11 @@
     ESC MFB 'DTOWAR-A' NUL '0,9999 szt * 100.00 zl' LF CR 'rabat 1.99' LF CR 'komentarz 3' ESC MFB1 'a98.00' ESC MFB2 'A' ESC MFE
     ACK
      */
+    
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    /* THE WEEKLY END HERE */
     
     return [NSData dataWithBytes:NULL length:0];
 }

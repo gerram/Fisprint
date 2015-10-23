@@ -14,6 +14,39 @@
 
 @implementation MERBaseCommands
 
+
+#pragma mark - Combinations
+- (NSData *)prefixLineData
+{
+    int esc = ESC;
+    NSMutableData *line = [NSMutableData dataWithBytes:&esc length:sizeof(esc)];
+    int mfb = MFB;
+    [line appendBytes:&mfb length:sizeof(mfb)];
+    
+    return line;
+}
+
+- (NSData *)postfixLineData
+{
+    int esc = ESC;
+    NSMutableData *line = [NSMutableData dataWithBytes:&esc length:sizeof(esc)];
+    int mfe = MFE;
+    [line appendBytes:&mfe length:sizeof(mfe)];
+    
+    return line;
+}
+
+- (NSData *)returnLineData
+{
+    int lf = LF;
+    NSMutableData *line = [NSMutableData dataWithBytes:&lf length:sizeof(lf)];
+    int cr = CR;
+    [line appendBytes:&cr length:sizeof(cr)];
+    
+    return line;
+}
+
+
 /*
 - (NSArray *)argumentCharsSet
 {
