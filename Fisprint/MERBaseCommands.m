@@ -62,4 +62,22 @@
 }
  */
 
+- (NSMutableSet *)baseSet
+{
+    NSMutableSet *set = [[NSMutableSet alloc] init];
+    
+    return set;
+}
+
+- (NSIndexSet *)nonControlCodes
+{
+    // all ASCII symbols hihger 0x20
+    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(33, 255-33)];
+    return set;
+}
+
+
+
+
+
 @end

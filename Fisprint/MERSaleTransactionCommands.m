@@ -26,6 +26,17 @@
     ACK
      */
     
+    // 1. check
+    NSData *tmp = [invoceNumber dataUsingEncoding:NSASCIIStringEncoding];
+    for (int i = 0; i <= tmp.length; i++) {
+        char buffer;
+        [tmp getBytes:&buffer range:NSMakeRange(i, 1)];
+        //NSLog(@"%d", (int)buffer);
+        
+    }
+    
+    
+    
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     NSString *C = @"C";
