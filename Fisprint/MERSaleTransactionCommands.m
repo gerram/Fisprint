@@ -38,7 +38,7 @@
     }
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:NULL length:0];
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
