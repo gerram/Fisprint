@@ -24,5 +24,7 @@
 - (NSData *)prefixLineData;
 - (NSData *)postfixLineData;
 - (NSData *)returnLineData;
+- (NSData *)escmfb1LineData;
+- (NSData *)escmfb2LineData;
 
 @end

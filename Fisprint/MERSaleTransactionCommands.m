@@ -26,27 +26,29 @@
     ACK
      */
     
+    
+#pragma TODO: !!! check via right parser (invoceNumber)
     // 1. check
+    /*
     NSData *tmp = [invoceNumber dataUsingEncoding:NSASCIIStringEncoding];
     for (int i = 0; i <= tmp.length; i++) {
         char buffer;
         [tmp getBytes:&buffer range:NSMakeRange(i, 1)];
         //NSLog(@"%d", (int)buffer);
-        
     }
-    
+     */
     
     
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
+    
     NSString *C = @"C";
     [resultData appendBytes:&C length:sizeof(C)];
-    
-#pragma TODO: !!! check via right parser (invoceNumber)
     
     if (invoceNumber) {
         [resultData appendBytes:&invoceNumber length:sizeof(resultData)];
     }
+    
     [resultData appendData:[self postfixLineData]];
     
     return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
@@ -57,6 +59,8 @@
                         comment1:(NSString *)comment1
                         comment2:(NSString *)comment2
                         comment3:(NSString *)comment3
+                           value:(NSNumber *)value
+                             vat:(NSString *)vat
                            error:(NSError *__autoreleasing *)error
 {
     /*
@@ -77,9 +81,30 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    /* THE WEEKLY END HERE */
+    [resultData appendBytes:(int *)0x44 length:sizeof(1)]; // 'D'
     
-    return [NSData dataWithBytes:NULL length:0];
+    [resultData appendBytes:&itemName length:sizeof(itemName)];
+    
+    [resultData appendBytes:(int *)0x0A length:sizeof(1)];
+    [resultData appendBytes:&comment1 length:sizeof(comment1)];
+    [resultData appendData:[self returnLineData]];
+    
+    [resultData appendBytes:&comment2 length:sizeof(comment2)];
+    [resultData appendData:[self returnLineData]];
+    
+    [resultData appendBytes:&comment3 length:sizeof(comment3)];
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:(int *)0x61 length:1]; // 'a'
+    [resultData appendBytes:&value length:sizeof(value)];
+    [resultData appendData:[self escmfb2LineData]];
+    
+    [resultData appendBytes:&vat length:sizeof(vat)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    
 }
 
 
@@ -95,7 +120,17 @@
     ACK
      */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    [resultData appendBytes:(int *)0x53 length:sizeof(1)];
+    [resultData appendBytes:(int *)0x20 length:1]; // SP
+    [resultData appendBytes:&text length:sizeof(text)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    
 }
 
 
@@ -114,7 +149,26 @@
    ACK
     */
     
-    return [NSData dataWithBytes:NULL length:0];
+    
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    [resultData appendBytes:(int *)0x44 length:1]; // 'D'
+    [resultData appendBytes:&itemName length:sizeof(itemName)];
+    [resultData appendBytes:(int *)0x00 length:1]; // NULL
+    
+    [resultData appendBytes:&comment length:sizeof(comment)];
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:(int *)0x63 length:1]; // 'c'
+    [resultData appendBytes:&value length:sizeof(value)];
+    [resultData appendData:[self escmfb2LineData]];
+    
+    [resultData appendBytes:&vat length:1];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -136,7 +190,25 @@
    ACK
     */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+   
+    [resultData appendBytes:(int *)0x64 length:1]; // 'd'
+    [resultData appendBytes:&itemName length:sizeof(itemName)];
+    [resultData appendBytes:(int *)0x00 length:1]; // NULL
+    
+    [resultData appendBytes:&apply_correct length:sizeof(apply_correct)];
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
+    [resultData appendBytes:&value length:sizeof(value)];
+    [resultData appendData:[self escmfb2LineData]];
+    
+    [resultData appendBytes:&vat length:sizeof(vat)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -152,7 +224,17 @@
     ACK
      */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    [resultData appendBytes:(int *)0x51 length:1]; // 'Q'
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:&subtotal length:1];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -169,7 +251,18 @@
     ACK
      */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    [resultData appendBytes:(int *)0x46 length:1]; // 'F'
+    [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:&percent length:sizeof(percent)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -191,8 +284,28 @@
     ESC MFB 'fa' ESC MFB1 'a337.00' ESC MFE
     ACK
      */
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
     
-    return [NSData dataWithBytes:NULL length:0];
+    [resultData appendBytes:(int *)0x66 length:1];
+    [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
+    [resultData appendData:[self escmfb1LineData]];
+    
+    for (NSString *amount in amountAG) {
+        [resultData appendBytes:&amount length:sizeof(amount)];
+        if (amount == [amountAG lastObject]) {
+            [resultData appendData:[self escmfb2LineData]];
+        } else {
+            [resultData appendBytes:(int *)0x0A length:1]; // LF
+        }
+    }
+    
+    [resultData appendBytes:&correctionFlag length:sizeof(correctionFlag)];
+    [resultData appendBytes:&totalAmount length:sizeof(totalAmount)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -211,7 +324,17 @@
     ACK
      */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    NSString *Ld = @"Ld";
+    [resultData appendBytes:&Ld length:sizeof(Ld)];
+    [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
+    [resultData appendBytes:&amount length:sizeof(amount)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 
@@ -227,7 +350,18 @@
     ACK
      */
     
-    return [NSData dataWithBytes:NULL length:0];
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    [resultData appendBytes:(int *)0x54 length:1]; // 'T'
+    [resultData appendData:[self escmfb1LineData]];
+    
+    [resultData appendBytes:(int *)0x61 length:1];
+    [resultData appendBytes:&total length:sizeof(total)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
 }
 
 //- (NSData *)receiptOrInvoiceFooter:(NSString *)source

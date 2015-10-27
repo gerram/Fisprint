@@ -47,6 +47,23 @@
 }
 
 
+- (NSData *)escmfb1LineData
+{
+    NSMutableData *line = [NSMutableData dataWithBytes:(int *)0x1B length:1];
+    [line appendBytes:(int *)0x81 length:1];
+    
+    return line;
+}
+
+
+- (NSData *)escmfb2LineData
+{
+    NSMutableData *line = [NSMutableData dataWithBytes:(int *)0x1B length:1];
+    [line appendBytes:(int *)0x82 length:1];
+    
+    return line;
+}
+
 /*
 - (NSArray *)argumentCharsSet
 {
