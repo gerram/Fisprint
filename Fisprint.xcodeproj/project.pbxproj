@@ -19,6 +19,7 @@
 		175096281BD7B6B00055AFE0 /* FisprintUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096271BD7B6B00055AFE0 /* FisprintUITests.m */; };
 		175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096361BD7BE030055AFE0 /* MERBaseCommands.m */; };
 		1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */; };
+		179D42091BE0A74800BF29DA /* MERPrinterDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D42081BE0A74700BF29DA /* MERPrinterDummy.m */; };
 		17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F41BBB1BDA570600EC2655 /* MERErrors.m */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,8 @@
 		175096361BD7BE030055AFE0 /* MERBaseCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERBaseCommands.m; sourceTree = "<group>"; };
 		175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERSaleTransactionCommands.h; sourceTree = "<group>"; };
 		1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERSaleTransactionCommands.m; sourceTree = "<group>"; };
+		179D42071BE0A74700BF29DA /* MERPrinterDummy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERPrinterDummy.h; sourceTree = "<group>"; };
+		179D42081BE0A74700BF29DA /* MERPrinterDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERPrinterDummy.m; sourceTree = "<group>"; };
 		17F41BBA1BDA570600EC2655 /* MERErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERErrors.h; sourceTree = "<group>"; };
 		17F41BBB1BDA570600EC2655 /* MERErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERErrors.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -116,6 +119,7 @@
 		175096011BD7B6B00055AFE0 /* Fisprint */ = {
 			isa = PBXGroup;
 			children = (
+				179D42061BE0A70800BF29DA /* Printer */,
 				175096381BD7BE120055AFE0 /* Commands */,
 				175096081BD7B6B00055AFE0 /* ViewController.h */,
 				175096091BD7B6B00055AFE0 /* ViewController.m */,
@@ -171,6 +175,15 @@
 				17F41BBB1BDA570600EC2655 /* MERErrors.m */,
 			);
 			name = Commands;
+			sourceTree = "<group>";
+		};
+		179D42061BE0A70800BF29DA /* Printer */ = {
+			isa = PBXGroup;
+			children = (
+				179D42071BE0A74700BF29DA /* MERPrinterDummy.h */,
+				179D42081BE0A74700BF29DA /* MERPrinterDummy.m */,
+			);
+			name = Printer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +327,7 @@
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,
 				175096041BD7B6B00055AFE0 /* main.m in Sources */,
 				17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */,
+				179D42091BE0A74800BF29DA /* MERPrinterDummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
