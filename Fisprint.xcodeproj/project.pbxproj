@@ -20,6 +20,8 @@
 		175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096361BD7BE030055AFE0 /* MERBaseCommands.m */; };
 		1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */; };
 		179D42091BE0A74800BF29DA /* MERPrinterDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D42081BE0A74700BF29DA /* MERPrinterDummy.m */; };
+		179D420C1BE0D8E900BF29DA /* MEROperationPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D420B1BE0D8E900BF29DA /* MEROperationPrinter.m */; };
+		179D42101BE0E2CE00BF29DA /* MEROpStartPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */; };
 		17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F41BBB1BDA570600EC2655 /* MERErrors.m */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +69,10 @@
 		1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERSaleTransactionCommands.m; sourceTree = "<group>"; };
 		179D42071BE0A74700BF29DA /* MERPrinterDummy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERPrinterDummy.h; sourceTree = "<group>"; };
 		179D42081BE0A74700BF29DA /* MERPrinterDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERPrinterDummy.m; sourceTree = "<group>"; };
+		179D420A1BE0D8E900BF29DA /* MEROperationPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEROperationPrinter.h; sourceTree = "<group>"; };
+		179D420B1BE0D8E900BF29DA /* MEROperationPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEROperationPrinter.m; sourceTree = "<group>"; };
+		179D420E1BE0E2CE00BF29DA /* MEROpStartPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEROpStartPrinter.h; path = ../MEROpStartPrinter.h; sourceTree = "<group>"; };
+		179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEROpStartPrinter.m; path = ../MEROpStartPrinter.m; sourceTree = "<group>"; };
 		17F41BBA1BDA570600EC2655 /* MERErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERErrors.h; sourceTree = "<group>"; };
 		17F41BBB1BDA570600EC2655 /* MERErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERErrors.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,6 +125,7 @@
 		175096011BD7B6B00055AFE0 /* Fisprint */ = {
 			isa = PBXGroup;
 			children = (
+				179D420D1BE0D8F100BF29DA /* Operations */,
 				179D42061BE0A70800BF29DA /* Printer */,
 				175096381BD7BE120055AFE0 /* Commands */,
 				175096081BD7B6B00055AFE0 /* ViewController.h */,
@@ -184,6 +191,17 @@
 				179D42081BE0A74700BF29DA /* MERPrinterDummy.m */,
 			);
 			name = Printer;
+			sourceTree = "<group>";
+		};
+		179D420D1BE0D8F100BF29DA /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				179D420A1BE0D8E900BF29DA /* MEROperationPrinter.h */,
+				179D420B1BE0D8E900BF29DA /* MEROperationPrinter.m */,
+				179D420E1BE0E2CE00BF29DA /* MEROpStartPrinter.h */,
+				179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */,
+			);
+			name = Operations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,8 +344,10 @@
 				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,
 				175096041BD7B6B00055AFE0 /* main.m in Sources */,
+				179D420C1BE0D8E900BF29DA /* MEROperationPrinter.m in Sources */,
 				17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */,
 				179D42091BE0A74800BF29DA /* MERPrinterDummy.m in Sources */,
+				179D42101BE0E2CE00BF29DA /* MEROpStartPrinter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +488,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Fisprint/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MER.Fisprint;
@@ -479,6 +500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Fisprint/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MER.Fisprint;

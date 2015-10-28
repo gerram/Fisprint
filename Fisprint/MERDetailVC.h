@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MEROperationPrinter.h"
 
-@interface MERDetailVC : UIViewController
-
+@interface MERDetailVC : UIViewController <PrinterDummyLink>
+- (IBAction)startPrinter:(id)sender;
 @end

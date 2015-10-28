@@ -81,11 +81,13 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x44 length:sizeof(1)]; // 'D'
+    char chD = 0x44;
+    [resultData appendBytes:&chD length:sizeof(1)]; // 'D'
     
     [resultData appendBytes:&itemName length:sizeof(itemName)];
     
-    [resultData appendBytes:(int *)0x0A length:sizeof(1)];
+    char chA = 0x41;
+    [resultData appendBytes:&chA length:sizeof(1)];
     [resultData appendBytes:&comment1 length:sizeof(comment1)];
     [resultData appendData:[self returnLineData]];
     
@@ -95,7 +97,8 @@
     [resultData appendBytes:&comment3 length:sizeof(comment3)];
     [resultData appendData:[self escmfb1LineData]];
     
-    [resultData appendBytes:(int *)0x61 length:1]; // 'a'
+    char cha = 0x61;
+    [resultData appendBytes:&cha length:1]; // 'a'
     [resultData appendBytes:&value length:sizeof(value)];
     [resultData appendData:[self escmfb2LineData]];
     
@@ -123,8 +126,10 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x53 length:sizeof(1)];
-    [resultData appendBytes:(int *)0x20 length:1]; // SP
+    char chS = 0x53;
+    [resultData appendBytes:&chS length:sizeof(1)]; // S
+    char chSP = 0x20;
+    [resultData appendBytes:&chSP length:1]; // SP
     [resultData appendBytes:&text length:sizeof(text)];
     
     [resultData appendData:[self postfixLineData]];
@@ -153,14 +158,17 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x44 length:1]; // 'D'
+    char chD = 0x44;
+    [resultData appendBytes:&chD length:1]; // 'D'
     [resultData appendBytes:&itemName length:sizeof(itemName)];
-    [resultData appendBytes:(int *)0x00 length:1]; // NULL
+    char ch00 = 0x00;
+    [resultData appendBytes:&ch00 length:1]; // NULL
     
     [resultData appendBytes:&comment length:sizeof(comment)];
     [resultData appendData:[self escmfb1LineData]];
     
-    [resultData appendBytes:(int *)0x63 length:1]; // 'c'
+    char chc = 0x63;
+    [resultData appendBytes:&chc length:1]; // 'c'
     [resultData appendBytes:&value length:sizeof(value)];
     [resultData appendData:[self escmfb2LineData]];
     
@@ -193,9 +201,11 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
    
-    [resultData appendBytes:(int *)0x64 length:1]; // 'd'
+    char chd = 0x64;
+    [resultData appendBytes:&chd length:1]; // 'd'
     [resultData appendBytes:&itemName length:sizeof(itemName)];
-    [resultData appendBytes:(int *)0x00 length:1]; // NULL
+    char ch00 = 0x00;
+    [resultData appendBytes:&ch00 length:1]; // NULL
     
     [resultData appendBytes:&apply_correct length:sizeof(apply_correct)];
     [resultData appendData:[self escmfb1LineData]];
@@ -227,7 +237,8 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x51 length:1]; // 'Q'
+    char chQ = 0x51;
+    [resultData appendBytes:&chQ length:1]; // 'Q'
     [resultData appendData:[self escmfb1LineData]];
     
     [resultData appendBytes:&subtotal length:1];
@@ -254,7 +265,8 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x46 length:1]; // 'F'
+    char chF = 0x46;
+    [resultData appendBytes:&chF length:1]; // 'F'
     [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
     [resultData appendData:[self escmfb1LineData]];
     
@@ -287,7 +299,8 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x66 length:1];
+    char chf = 0x66;
+    [resultData appendBytes:&chf length:1]; // 'f'
     [resultData appendBytes:&discount_uplift length:sizeof(discount_uplift)];
     [resultData appendData:[self escmfb1LineData]];
     
@@ -296,7 +309,8 @@
         if (amount == [amountAG lastObject]) {
             [resultData appendData:[self escmfb2LineData]];
         } else {
-            [resultData appendBytes:(int *)0x0A length:1]; // LF
+            char chLF = 0x0A;
+            [resultData appendBytes:&chLF length:1]; // LF
         }
     }
     
@@ -353,10 +367,12 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    [resultData appendBytes:(int *)0x54 length:1]; // 'T'
+    char chT = 0x54;
+    [resultData appendBytes:&chT length:1]; // 'T'
     [resultData appendData:[self escmfb1LineData]];
     
-    [resultData appendBytes:(int *)0x61 length:1];
+    char cha = 0x61;
+    [resultData appendBytes:&cha length:1]; // 'a'
     [resultData appendBytes:&total length:sizeof(total)];
     
     [resultData appendData:[self postfixLineData]];
