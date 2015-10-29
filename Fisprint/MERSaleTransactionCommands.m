@@ -42,8 +42,9 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    NSString *C = @"C";
-    [resultData appendBytes:&C length:sizeof(C)];
+//    NSString *C = @"C";
+//    [resultData appendBytes:&C length:sizeof(C)];
+    [resultData appendBytes:(char*)0x43 length:1]; // 'C'
     
     if (invoceNumber) {
         [resultData appendBytes:&invoceNumber length:sizeof(resultData)];
@@ -81,8 +82,8 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    char chD = 0x44;
-    [resultData appendBytes:&chD length:sizeof(1)]; // 'D'
+    //char chD = 0x44;
+    [resultData appendBytes:(char *)0x44 length:sizeof(1)]; // 'D'
     
     [resultData appendBytes:&itemName length:sizeof(itemName)];
     
