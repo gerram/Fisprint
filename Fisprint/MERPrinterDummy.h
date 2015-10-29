@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+
+
 @interface MERPrinterDummy : NSObject
 
 - (void)inputPrinter:(NSData *)request completion:(void (^) (NSData *response, NSError *error))completion;
+
 @end

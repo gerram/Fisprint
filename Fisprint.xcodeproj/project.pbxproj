@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1722F51C1BE20913001D8610 /* MERPrinterStatusCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1722F51B1BE20913001D8610 /* MERPrinterStatusCommands.m */; };
 		1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1730D37F1BDFCD1A001F455C /* MERDetailVC.m */; };
 		1730D3831BDFCD3C001F455C /* MERMasterTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1730D3821BDFCD3C001F455C /* MERMasterTVC.m */; };
 		175096041BD7B6B00055AFE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096031BD7B6B00055AFE0 /* main.m */; };
@@ -43,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1722F51A1BE20913001D8610 /* MERPrinterStatusCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERPrinterStatusCommands.h; sourceTree = "<group>"; };
+		1722F51B1BE20913001D8610 /* MERPrinterStatusCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERPrinterStatusCommands.m; sourceTree = "<group>"; };
 		1730D37E1BDFCD1A001F455C /* MERDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERDetailVC.h; sourceTree = "<group>"; };
 		1730D37F1BDFCD1A001F455C /* MERDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERDetailVC.m; sourceTree = "<group>"; };
 		1730D3811BDFCD3C001F455C /* MERMasterTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERMasterTVC.h; sourceTree = "<group>"; };
@@ -178,6 +181,8 @@
 				175096361BD7BE030055AFE0 /* MERBaseCommands.m */,
 				175096391BD7CD010055AFE0 /* MERSaleTransactionCommands.h */,
 				1750963A1BD7CD010055AFE0 /* MERSaleTransactionCommands.m */,
+				1722F51A1BE20913001D8610 /* MERPrinterStatusCommands.h */,
+				1722F51B1BE20913001D8610 /* MERPrinterStatusCommands.m */,
 				17F41BBA1BDA570600EC2655 /* MERErrors.h */,
 				17F41BBB1BDA570600EC2655 /* MERErrors.m */,
 			);
@@ -340,6 +345,7 @@
 				1730D3831BDFCD3C001F455C /* MERMasterTVC.m in Sources */,
 				1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */,
 				1750960A1BD7B6B00055AFE0 /* ViewController.m in Sources */,
+				1722F51C1BE20913001D8610 /* MERPrinterStatusCommands.m in Sources */,
 				1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */,
 				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,

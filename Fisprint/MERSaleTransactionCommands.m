@@ -13,7 +13,6 @@
 
 
 
-
 - (NSData *)openReceiptOrInvoce:(NSString *)invoceNumber
                           error:(NSError *__autoreleasing *)error
 {
@@ -40,11 +39,10 @@
     
     
     NSMutableData *resultData = [[NSMutableData alloc] init];
-    [resultData appendData:[self prefixLineData]];
+    [resultData appendData:[super prefixLineData]];
     
-//    NSString *C = @"C";
-//    [resultData appendBytes:&C length:sizeof(C)];
-    [resultData appendBytes:(char*)0x43 length:1]; // 'C'
+    char chC = 0x43;
+    [resultData appendBytes:&chC length:sizeof(1)]; // 'C'
     
     if (invoceNumber) {
         [resultData appendBytes:&invoceNumber length:sizeof(resultData)];
@@ -52,7 +50,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -82,8 +80,8 @@
     NSMutableData *resultData = [[NSMutableData alloc] init];
     [resultData appendData:[self prefixLineData]];
     
-    //char chD = 0x44;
-    [resultData appendBytes:(char *)0x44 length:sizeof(1)]; // 'D'
+    char chD = 0x44;
+    [resultData appendBytes:&chD length:sizeof(1)]; // 'D'
     
     [resultData appendBytes:&itemName length:sizeof(itemName)];
     
@@ -107,8 +105,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
-    
+    return resultData;
 }
 
 
@@ -135,8 +132,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
-    
+    return resultData;
 }
 
 
@@ -177,7 +173,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -219,7 +215,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -246,7 +242,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -275,7 +271,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -320,7 +316,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -349,7 +345,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 
@@ -378,7 +374,7 @@
     
     [resultData appendData:[self postfixLineData]];
     
-    return [NSData dataWithBytes:&resultData length:sizeof(resultData)];
+    return resultData;
 }
 
 //- (NSData *)receiptOrInvoiceFooter:(NSString *)source
@@ -396,7 +392,6 @@
 //    ACK
 //     */
 //    
-//    return [NSData dataWithBytes:NULL length:0];
 //}
 
 @end

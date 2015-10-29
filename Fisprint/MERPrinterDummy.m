@@ -8,9 +8,20 @@
 
 #import "MERPrinterDummy.h"
 #import "MERErrors.h"
+#import "MERPrinterStatusCommands.h"
+
+
+typedef NS_ENUM(NSUInteger, PrinterState) {
+    PrinterStateIdle,
+    PrinterStateNonFiscal,
+    PrinterStateFiscal,
+};
+
 
 @interface MERPrinterDummy ()
+@property (nonatomic, assign) PrinterState state;
 @property (nonatomic, strong) dispatch_queue_t printerDelayQ;
+@property (nonatomic, strong) MERPrinterStatusCommands *psc;
 @end
 
 @implementation MERPrinterDummy
@@ -24,21 +35,57 @@
     return _printerDelayQ;
 }
 
+- (MERPrinterStatusCommands *)psc
+{
+    if (!_psc) {
+        _psc = [[MERPrinterStatusCommands alloc] init];
+    }
+    return _psc;
+}
+
+- (PrinterState)state
+{
+    if (!_state) {
+        _state = PrinterStateIdle;
+        //_state = PrinterStateFiscal;
+        //_state = PrinterStateNonFiscal;
+        //_state = (NSUInteger)(arc4random() % 3);
+    }
+    return _state;
+}
+
 
 - (void)inputPrinter:(NSData *)request completion:(void(^)(NSData *response, NSError *error))completion
 {
+    //NSLog(@"Printer got request: %@", request);
+    NSData *output;
+    
+    NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
     
     //float delayF = logf(arc4random() % 100);
-    float delayF = logf(arc4random() % 50);
-    //int delay = (int) delayF;
+    float delayF = logf(arc4random() % 20);
     int delay = ceilf(delayF);
     //NSLog(@"%f, %i", delayF, delay);
+    char i = (delay != 1) ? 0x06 : 0x15;
     
-    char i = (delay != 3) ? 0x06 : 0x00;
-    NSData *output = [NSData dataWithBytes:&i length:1];
+    if ([request isEqualToData:queryPrinterExtendedStatusTemplate]) {
+        if (self.state == PrinterStateIdle) {
+            char chA = 0x41;
+            output = [NSData dataWithBytes:&chA length:1];
+        } else if (self.state == PrinterStateNonFiscal) {
+            char chB = 0x42;
+            output = [NSData dataWithBytes:&chB length:1];
+        } else if (self.state == PrinterStateFiscal){
+            char chC = 0x43;
+            output = [NSData dataWithBytes:&chC length:1];
+        }
+        
+    } else {
+        output = [NSData dataWithBytes:&i length:1];
+    }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), self.printerDelayQ, ^{
-        NSError *error = (i == 0x00) ? [NSError errorWithDomain:MERDomainError code:0 userInfo:nil] : nil ;
+        NSError *error = (i == 0x15) ? [NSError errorWithDomain:MERDomainError code:0 userInfo:nil] : nil ;
         completion(output, error);
     });
 }

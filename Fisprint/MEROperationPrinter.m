@@ -10,6 +10,7 @@
 
 @interface MEROperationPrinter ()
 @property (nonatomic, assign) BOOL isCompleted;
+@property (nonatomic, strong) MERPrinterDummy *printerDummy;
 @end
 
 @implementation MEROperationPrinter
@@ -31,24 +32,37 @@
     return _isCompleted;
 }
 
+- (id)initWithData:(NSData *)data
+     operationName:(NSString *)operationName
+          delegate:(id<PrinterDummyLink>)delegate
+{
+    if (self = [self init]) {
+        self.data = data;
+        self.name = operationName;
+        self.delegate = delegate;
+    }
+    return self;
+}
+
+
 - (void)main
 {
     if (!self.isCancelled) {
-        [self.printerDummy inputPrinter:[[NSData alloc] init] completion: ^(NSData *response, NSError *error) {
+        [self.printerDummy inputPrinter:self.data completion: ^(NSData *response, NSError *error) {
             if (!error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"%@ %@", self.name, response);
-                });
+                NSLog(@"%@ %@", self.name, response);
                 self.isCompleted = TRUE;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_delegate operationResponse:response WithError:nil forOperation:self.name];
+                });
                 [self finish];
                 
             } else {
                 //self.error = error;
+                NSLog(@"Error - %@", self.name);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"Error - %@", self.name);
+                    [_delegate operationResponse:nil WithError:error forOperation:self.name];
                 });
-                //[self.printerQ cancelAllOperations];
-                [self.delegate finishedWithError:error];
             }
         }];
     }
