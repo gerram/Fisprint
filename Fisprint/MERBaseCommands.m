@@ -49,8 +49,10 @@
 
 - (NSData *)escmfb1LineData
 {
-    NSMutableData *line = [NSMutableData dataWithBytes:(int *)0x1B length:1];
-    [line appendBytes:(int *)0x81 length:1];
+    char chESC = 0x1B;
+    NSMutableData *line = [NSMutableData dataWithBytes:&chESC length:1];
+    char chMFB1 = 0x81;
+    [line appendBytes:&chMFB1 length:1];
     
     return line;
 }
@@ -58,8 +60,10 @@
 
 - (NSData *)escmfb2LineData
 {
-    NSMutableData *line = [NSMutableData dataWithBytes:(int *)0x1B length:1];
-    [line appendBytes:(int *)0x82 length:1];
+    char chESC = 0x1B;
+    NSMutableData *line = [NSMutableData dataWithBytes:&chESC length:1];
+    char chMFB2 = 0x82;
+    [line appendBytes:&chMFB2 length:1];
     
     return line;
 }

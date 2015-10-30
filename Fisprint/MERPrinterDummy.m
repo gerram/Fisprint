@@ -26,6 +26,25 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
 
 @implementation MERPrinterDummy
 
+// Shared Singleton
+// Class method that returns a singleton instance
+//
+// Platform: All
+// Language: Objective-C
+// Completion Scope: Class Implementation
+
+    
++ (instancetype)sharedManager {
+    static MERPrinterDummy *_sharedManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedManager = [[self alloc] init];
+    });
+    
+    return _sharedManager;
+}
+
+
 #pragma mark - Properties
 - (dispatch_queue_t)printerDelayQ
 {
@@ -46,10 +65,10 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
 - (PrinterState)state
 {
     if (!_state) {
-        _state = PrinterStateIdle;
+        //_state = PrinterStateIdle;
         //_state = PrinterStateFiscal;
         //_state = PrinterStateNonFiscal;
-        //_state = (NSUInteger)(arc4random() % 3);
+        _state = (NSUInteger)(arc4random() % 2) + 1; // only nonFiscal or Fiscal
     }
     return _state;
 }
@@ -57,7 +76,7 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
 
 - (void)inputPrinter:(NSData *)request completion:(void(^)(NSData *response, NSError *error))completion
 {
-    //NSLog(@"Printer got request: %@", request);
+    NSLog(@"Printer got request: %@", request);
     NSData *output;
     
     NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
@@ -66,8 +85,11 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
     float delayF = logf(arc4random() % 20);
     int delay = ceilf(delayF);
     //NSLog(@"%f, %i", delayF, delay);
-    char i = (delay != 1) ? 0x06 : 0x15;
+    //char i = (delay != 1) ? 0x06 : 0x15;
+    char i = (delay >= 2) ? 0x06 : 0x15; // for errors
     
+    
+    // printer state
     if ([request isEqualToData:queryPrinterExtendedStatusTemplate]) {
         if (self.state == PrinterStateIdle) {
             char chA = 0x41;

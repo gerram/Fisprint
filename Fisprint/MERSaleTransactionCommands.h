@@ -70,4 +70,13 @@
 //- (NSData *)receiptOrInvoiceFooter:(NSUInteger)index
 //                         parameter:(NSUInteger)parameter;
 
+
+// 4.3.15 Cancel receipt or VAT invoice
+- (NSData *)cancelReceiptOrVatInvoice;
+//- (NSData *)cancelReceiptOrVatInvoice:(NSNumber *)total;
+
+// 4.3.18 End of Sales Transaction
+- (NSData *)endOfSalesTransaction:(NSString *)saleDate;
+
+
 @end

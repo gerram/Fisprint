@@ -20,6 +20,8 @@
 @property (nonatomic, strong) MERSaleTransactionCommands *stc;
 @property (nonatomic, strong) MERPrinterStatusCommands *psc;
 @property (nonatomic, strong) MERPrinterDummy *printerDummy;
+@property (nonatomic, assign) BOOL isPrinterStateFiscal;
+//@property (atomic, strong) NSArray *operationsArray;
 @property (nonatomic, strong) NSOperationQueue *printerQ;
 @property (nonatomic, strong) NSError *error;
 
@@ -53,7 +55,7 @@
 - (MERPrinterDummy *)printerDummy
 {
     if (!_printerDummy) {
-        _printerDummy = [[MERPrinterDummy alloc] init];
+        _printerDummy = [MERPrinterDummy sharedManager];
     }
     return _printerDummy;
 }
@@ -150,13 +152,109 @@
     return TRUE;
 }
 
-typedef NS_OPTIONS(NSUInteger, ManagedPrinterStatesObject) {
-    MPSP_idle =         1 << 0,
-    MPSP_nonfiscal =    1 << 1,
-    MPSP_fiscal =       1 << 2,
-};
+#pragma mark - Cancel Bad Receipt
+- (void)cancelBadReceiptAndReprint
+{
+    if (_isPrinterStateFiscal) {
+        NSLog(@"--- --- fiscal repeat --- ---");
+        [self printerCloseReceipt];
+    } else {
+        NSLog(@"--- --- non-fiscal repeat --- ---");
+        [self printReceiptAction];
+    }
+}
 
-- (void)printerState
+- (void)printerCloseReceipt
+{
+    NSArray *cancelBuffer = [self printerCloseReceiptBuffer];
+    NSArray *reprintBuffer = [self printReceiptBuffer];
+    NSArray *cancelReprintBuffer = [cancelBuffer arrayByAddingObjectsFromArray:reprintBuffer];
+    [cancelReprintBuffer[1] addDependency:cancelReprintBuffer.firstObject];
+    
+    [self.printerQ addOperations:cancelReprintBuffer waitUntilFinished:FALSE];
+}
+
+- (NSArray *)printerCloseReceiptBuffer
+{
+    NSData *cancelReceiptData = [self.stc cancelReceiptOrVatInvoice];
+    MEROperationPrinter *operation_cancelReceiptData = [[MEROperationPrinter alloc] initWithData:cancelReceiptData operationName:OID005 delegate:self];
+    
+    return @[operation_cancelReceiptData];
+    //[self.printerQ addOperation:operation_cancelReceiptData];
+}
+
+#pragma mark - Print Receipt
+- (void)printReceiptAction
+{
+    [self.printerQ addOperations:[self printReceiptBuffer] waitUntilFinished:FALSE];
+}
+
+- (NSArray *)printReceiptBuffer
+{
+    NSMutableArray *operationsBuffer = [[NSMutableArray alloc] init];
+    
+    // Open receipt
+    NSData *receipt = [self.stc openReceiptOrInvoce:@"AB123" error:nil];
+    MEROperationPrinter *operation_OpenReceipt = [[MEROperationPrinter alloc] initWithData:receipt
+                                                                  operationName:OID002
+                                                                       delegate:self];
+    
+    [operationsBuffer addObject:operation_OpenReceipt];
+    
+    // Lines with items
+    NSDictionary *item = @{@"itemName": @"aaa", @"comment": @"Comment template", @"value": @12.50, @"vat": @"A"};
+    NSArray *items = @[item, item, item];
+    for (NSDictionary *item in items) {
+        NSData *salesTransactionLineData = [self.stc salesTransactionLine:[[NSProcessInfo processInfo] globallyUniqueString]
+                                                             comment1:item[@"comment"]
+                                                             comment2:item[@"comment"]
+                                                             comment3:item[@"comment"]
+                                                                value:item[@"value"]
+                                                                  vat:item[@"vat"]
+                                                                error:nil];
+        
+        MEROperationPrinter *operation_salesTransactionLine = [[MEROperationPrinter alloc] initWithData:salesTransactionLineData operationName:OID003 delegate:self];
+        
+        if ([item isEqual:items.firstObject]) {
+            // first line of receipt
+            [operation_salesTransactionLine addDependency:operation_OpenReceipt];
+        } else {
+            // any next line what is not first
+            [operation_salesTransactionLine addDependency:operationsBuffer.lastObject];
+        }
+        
+        [operationsBuffer addObject:operation_salesTransactionLine];
+    }
+    
+    // Total
+    NSData *totalData = [self.stc transactionTotal:@125.01 error:nil];
+    MEROperationPrinter *operation_Total = [[MEROperationPrinter alloc] initWithData:totalData
+                                                                       operationName:OID004
+                                                                            delegate:self];
+    
+    [operation_Total addDependency:operationsBuffer.lastObject];
+    [operationsBuffer addObject:operation_Total];
+    
+    // Close receipt
+    NSData *endSaleTransactionData = [self.stc endOfSalesTransaction:[NSDate date].description];
+    MEROperationPrinter *operation_endSaleTransaction = [[MEROperationPrinter alloc] initWithData:endSaleTransactionData operationName:OID006 delegate:self];
+    
+    [operation_endSaleTransaction addDependency:operation_Total];
+    [operationsBuffer addObject:operation_endSaleTransaction];
+    
+    return operationsBuffer;
+    //[self.printerQ addOperations:operationsBuffer waitUntilFinished:FALSE];
+}
+
+- (IBAction)printReceipt:(id)sender {
+    [self printReceiptAction];
+    self.printReceipt.enabled = FALSE;
+}
+
+
+
+#pragma mark - Turn On printer
+- (void)startPrinterAction
 {
     NSData *queryPrinterStateData = [self.psc queryPrinterExtendedStatus];
     MEROperationPrinter *printerState = [[MEROperationPrinter alloc] initWithData:queryPrinterStateData operationName:OID001 delegate:self];
@@ -165,7 +263,7 @@ typedef NS_OPTIONS(NSUInteger, ManagedPrinterStatesObject) {
 }
 
 - (IBAction)startPrinter:(id)sender {
-    [self printerState];
+    [self startPrinterAction];
 }
 
 #pragma mark - PrinterDummyLink delegate
@@ -187,6 +285,7 @@ typedef NS_OPTIONS(NSUInteger, ManagedPrinterStatesObject) {
                     break;
                 case 0x42:
                     // B - NonFiscal mode
+                    self.isPrinterStateFiscal = FALSE;
                     self.turnOnPrinter.enabled = FALSE ;
                     self.printReceipt.enabled = TRUE;
                     self.consoleText.text = @"> Printer mode: NON FISCAL";
@@ -194,6 +293,7 @@ typedef NS_OPTIONS(NSUInteger, ManagedPrinterStatesObject) {
                     break;
                 case 0x43:
                     // C - Fiscal mode
+                    self.isPrinterStateFiscal = TRUE;
                     self.turnOnPrinter.enabled = FALSE;
                     self.printReceipt.enabled = TRUE;
                     self.consoleText.text = @"> Printer mode: FISCAL";
@@ -202,11 +302,35 @@ typedef NS_OPTIONS(NSUInteger, ManagedPrinterStatesObject) {
                 default:
                     break;
             }
+            
+        } else if ([nameOperation isEqualToString:OID006]) {
+            // Success!!!
+            self.consoleText.text = [NSString stringWithFormat:@"> Receipt was printed SUCCESSFULLY in %@ mode", self.isPrinterStateFiscal ? @"fiscal" : @"non-fiscal"];
+            self.printReceipt.enabled = TRUE;
+        
+        } else if ([nameOperation isEqualToString:OID005]) {
+            // Canceled receipt
+            self.consoleText.text = @"> Receipt in fiscal mode was canceled";
         }
         
     } else {
-        [self.printerQ cancelAllOperations];
-        self.printerQ = nil;
+        if ([nameOperation isEqualToString:OID001]) {
+            self.consoleText.text = @"> Turn On printer";
+            [self.printerQ cancelAllOperations];
+            self.printerQ = nil;
+        
+//        } else if ([nameOperation isEqualToString:OID005]) {
+//            self.consoleText.text = @"> Receipt was not canceled. Trying again right now";
+//            [self.printerQ cancelAllOperations];
+//            self.printerQ = nil;
+//            [self printerCloseReceipt];
+            
+        } else {
+            self.consoleText.text = @"> Previous operation finished with Error. Trying again right now";
+            [self.printerQ cancelAllOperations];
+            self.printerQ = nil;
+            [self cancelBadReceiptAndReprint];
+        }
     }
 }
 

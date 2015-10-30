@@ -8,7 +8,11 @@
 
 
 #define OID001  @"QueryPrinterState"
-#define OID002  @"QueryChangePrinterStateToFiscal"
+#define OID002  @"OpenReceipt"
+#define OID003  @"SalesTransactionLine"
+#define OID004  @"TransactionTotal"
+#define OID005  @"CancelReceipt"
+#define OID006  @"EndSaleTransaction"
 
 #import <Foundation/Foundation.h>
 #import "MERPrinterDummy.h"

@@ -394,4 +394,57 @@
 //    
 //}
 
+
+//- (NSData *)cancelReceiptOrVatInvoice:(NSNumber *)total
+- (NSData *)cancelReceiptOrVatInvoice
+{
+    /*
+    4.3.15 Cancel receipt or VAT invoice
+    Format:
+    ESC MFB T ESC MFB1 c [total] ESC MFE
+    Example:
+    ESC MFB 'T' ESC MFB1 'c' ESC MFE
+    ACK
+     */
+    
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    char chT = 0x54;
+    [resultData appendBytes:&chT length:1]; // 'T'
+    
+    [resultData appendData:[self escmfb1LineData]];
+    char chc = 0x63;
+    [resultData appendBytes:&chc length:1]; // 'c'
+    //[resultData appendBytes:&total length:sizeof(total)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return resultData;
+}
+
+
+- (NSData *)endOfSalesTransaction:(NSString *)saleDate
+{
+    /*
+    Format:
+    ESC MFB E[<sale_date>] ESC MFE
+    Example:
+    ESC MFB 'E' ESC MFE
+    ACK
+     */
+    
+    NSMutableData *resultData = [[NSMutableData alloc] init];
+    [resultData appendData:[self prefixLineData]];
+    
+    char chE = 0x45;
+    [resultData appendBytes:&chE length:1]; // 'E'
+    
+    [resultData appendBytes:&saleDate length:sizeof(saleDate)];
+    
+    [resultData appendData:[self postfixLineData]];
+    
+    return resultData;
+}
+
 @end

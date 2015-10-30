@@ -12,6 +12,8 @@
 
 @interface MERPrinterDummy : NSObject
 
++ (instancetype)sharedManager;
+
 - (void)inputPrinter:(NSData *)request completion:(void (^) (NSData *response, NSError *error))completion;
 
 @end
