@@ -21,7 +21,6 @@
 @property (nonatomic, strong) MERPrinterStatusCommands *psc;
 @property (nonatomic, strong) MERPrinterDummy *printerDummy;
 @property (nonatomic, assign) BOOL isPrinterStateFiscal;
-//@property (atomic, strong) NSArray *operationsArray;
 @property (nonatomic, strong) NSOperationQueue *printerQ;
 @property (nonatomic, strong) NSError *error;
 
@@ -33,7 +32,20 @@
 @end
 
 
+
 @implementation MERDetailVC
+
+- (IBAction)startPrinter:(id)sender {
+    [self startPrinterAction];
+}
+
+
+- (IBAction)printReceipt:(id)sender {
+    [self printReceiptAction];
+    self.printReceipt.enabled = FALSE;
+}
+
+
 #pragma mark - Properties
 - (MERPrinterStatusCommands *)psc
 {
@@ -86,7 +98,7 @@
     // Do any additional setup after loading the view.
 }
 
-
+/*
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -100,57 +112,14 @@
 //        [self.printerQ cancelAllOperations];
 //    }
 //}
-
+*/
+ 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-- (BOOL)makeTransaction
-{
-    NSData *printerStartData = [self.stc openReceiptOrInvoce:@"asd ljew 113434" error:nil];
-    MEROperationPrinter *printerStart = [[MEROperationPrinter alloc] init];
-    printerStart.delegate = self;
-    printerStart.name = @"printerStart";
-    printerStart.data = printerStartData;
-    //printerStart.printerDummy = self.printerDummy;
-    
-    MEROperationPrinter *operationA = [[MEROperationPrinter alloc] init];
-    operationA.delegate = self;
-    operationA.name = @"operationA";
-    //operationA.printerDummy = self.printerDummy;
-    
-    MEROperationPrinter *operationB = [[MEROperationPrinter alloc] init];
-    operationB.delegate = self;
-    operationB.name = @"operationB";
-    //operationB.printerDummy = self.printerDummy;
-    
-    MEROperationPrinter *operationC = [[MEROperationPrinter alloc] init];
-    operationC.delegate = self;
-    operationC.name = @"operationC";
-    //operationC.printerDummy = self.printerDummy;
-    
-    [operationA addDependency:printerStart];
-    [operationB addDependency:operationA];
-    [operationC addDependency:operationB];
-    
-    
-    [self.printerQ addOperations:@[printerStart, operationA, operationB, operationC] waitUntilFinished:FALSE];
-    
-    return TRUE;
-}
 
 #pragma mark - Cancel Bad Receipt
 - (void)cancelBadReceiptAndReprint
@@ -164,6 +133,7 @@
     }
 }
 
+// TODO: These method for model
 - (void)printerCloseReceipt
 {
     NSArray *cancelBuffer = [self printerCloseReceiptBuffer];
@@ -174,6 +144,7 @@
     [self.printerQ addOperations:cancelReprintBuffer waitUntilFinished:FALSE];
 }
 
+// TODO: These method for model
 - (NSArray *)printerCloseReceiptBuffer
 {
     NSData *cancelReceiptData = [self.stc cancelReceiptOrVatInvoice];
@@ -184,6 +155,7 @@
 }
 
 #pragma mark - Print Receipt
+// TODO: These method for model
 - (void)printReceiptAction
 {
     [self.printerQ addOperations:[self printReceiptBuffer] waitUntilFinished:FALSE];
@@ -246,14 +218,11 @@
     //[self.printerQ addOperations:operationsBuffer waitUntilFinished:FALSE];
 }
 
-- (IBAction)printReceipt:(id)sender {
-    [self printReceiptAction];
-    self.printReceipt.enabled = FALSE;
-}
 
 
 
 #pragma mark - Turn On printer
+// TODO: This method for model
 - (void)startPrinterAction
 {
     NSData *queryPrinterStateData = [self.psc queryPrinterExtendedStatus];
@@ -262,10 +231,8 @@
     self.consoleText.text = @"> Checking printer...";
 }
 
-- (IBAction)startPrinter:(id)sender {
-    [self startPrinterAction];
-}
 
+// TODO: To make normal handler for input signals
 #pragma mark - PrinterDummyLink delegate
 - (void)operationResponse:(NSData *)data
                 WithError:(NSError *)error

@@ -16,7 +16,7 @@ NSString * const MERDomainError = @"com.merann.fisprint.ErrorDomain";
                      title:(NSString *)title
                description:(NSString *)description
 {
-#pragma TODO: To make userInfo dict
+// TODO: To make userInfo dict
     NSDictionary *userInfo = @{};
     
     NSError *error = [NSError errorWithDomain:MERDomainError code:code userInfo:userInfo];

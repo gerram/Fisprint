@@ -33,7 +33,7 @@
 {
     NSString *invoceNumber = @"ASD1234adoi";
     NSString *expectedInvoceNumber = @"6053c5d8 fa7f0000";
-#pragma TODO: Converter Raw repro string -> NSData
+// TODO: Converter Raw repro string -> NSData
     NSData *expectedData = [[NSData alloc] init];
     NSData *retData = [self.fisprint openReceiptOrInvoce:invoceNumber error:nil];
     XCTAssertEqualObjects(expectedData, retData, @"0penReceiptOrInvoce generated not right data.");

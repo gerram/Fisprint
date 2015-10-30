@@ -26,7 +26,7 @@
      */
     
     
-#pragma TODO: !!! check via right parser (invoceNumber)
+// TODO: !!! check via right parser (invoceNumber)
     // 1. check
     /*
     NSData *tmp = [invoceNumber dataUsingEncoding:NSASCIIStringEncoding];
