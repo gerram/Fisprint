@@ -19,7 +19,6 @@
 - (MERPrinterDummy *)printerDummy
 {
     if (!_printerDummy) {
-        //_printerDummy = [[MERPrinterDummy alloc] init];
         _printerDummy = [MERPrinterDummy sharedManager];
     }
     return _printerDummy;

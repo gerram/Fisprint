@@ -6,7 +6,6 @@
 //  Copyright © 2015 George Malushkin. All rights reserved.
 //
 
-
 #import "MERDetailVC.h"
 #import "MERPrinterDummy.h"
 #import "MEROperationPrinter.h"
@@ -14,7 +13,7 @@
 #import "MERSaleTransactionCommands.h"
 #import "MERPrinterStatusCommands.h"
 
-
+#define ERROR_COUNTER_MAX 10
 
 @interface MERDetailVC ()
 @property (nonatomic, strong) MERSaleTransactionCommands *stc;
@@ -23,7 +22,7 @@
 @property (nonatomic, assign) BOOL isPrinterStateFiscal;
 @property (nonatomic, strong) NSOperationQueue *printerQ;
 @property (nonatomic, strong) NSError *error;
-
+@property (nonatomic, assign) NSInteger errorCounter;
 
 @property (weak, nonatomic) IBOutlet UIButton *turnOnPrinter;
 @property (weak, nonatomic) IBOutlet UIButton *printReceipt;
@@ -55,6 +54,7 @@
     return _psc;
 }
 
+
 - (MERSaleTransactionCommands *)stc
 {
     if (!_stc) {
@@ -71,6 +71,7 @@
     }
     return _printerDummy;
 }
+
 
 - (NSOperationQueue *)printerQ
 {
@@ -92,11 +93,12 @@
     return _error;
 }
 
-
+/*
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+*/
 
 /*
 - (void)viewWillAppear:(BOOL)animated
@@ -136,12 +138,18 @@
 // TODO: These method for model
 - (void)printerCloseReceipt
 {
-    NSArray *cancelBuffer = [self printerCloseReceiptBuffer];
-    NSArray *reprintBuffer = [self printReceiptBuffer];
-    NSArray *cancelReprintBuffer = [cancelBuffer arrayByAddingObjectsFromArray:reprintBuffer];
-    [cancelReprintBuffer[1] addDependency:cancelReprintBuffer.firstObject];
+    if (_errorCounter <= ERROR_COUNTER_MAX) {
+        NSArray *cancelBuffer = [self printerCloseReceiptBuffer];
+        NSArray *reprintBuffer = [self printReceiptBuffer];
+        NSArray *cancelReprintBuffer = [cancelBuffer arrayByAddingObjectsFromArray:reprintBuffer];
+        [cancelReprintBuffer[1] addDependency:cancelReprintBuffer.firstObject];
+        
+        [self.printerQ addOperations:cancelReprintBuffer waitUntilFinished:FALSE];
+        
+    } else {
+        [self stopWithNoService];
+    }
     
-    [self.printerQ addOperations:cancelReprintBuffer waitUntilFinished:FALSE];
 }
 
 // TODO: These method for model
@@ -158,7 +166,11 @@
 // TODO: These method for model
 - (void)printReceiptAction
 {
-    [self.printerQ addOperations:[self printReceiptBuffer] waitUntilFinished:FALSE];
+    if (self.errorCounter <= ERROR_COUNTER_MAX) {
+        [self.printerQ addOperations:[self printReceiptBuffer] waitUntilFinished:FALSE];
+    } else {
+        [self stopWithNoService];
+    }
 }
 
 - (NSArray *)printReceiptBuffer
@@ -233,6 +245,17 @@
 
 
 // TODO: To make normal handler for input signals
+- (void)stopWithNoService
+{
+    [self.printerQ cancelAllOperations];
+    self.printerQ = nil;
+    self.errorCounter = 0;
+    
+    self.turnOnPrinter.enabled = TRUE;
+    self.printReceipt.enabled = FALSE;
+    self.consoleText.text = @"> Printer in error mode";
+}
+
 #pragma mark - PrinterDummyLink delegate
 - (void)operationResponse:(NSData *)data
                 WithError:(NSError *)error
@@ -248,7 +271,6 @@
                     self.turnOnPrinter.enabled = FALSE;
                     self.printReceipt.enabled = TRUE;
                     self.consoleText.text = @"> Printer mode: IDLE";
-                    NSLog(@"%d", i);
                     break;
                 case 0x42:
                     // B - NonFiscal mode
@@ -256,7 +278,6 @@
                     self.turnOnPrinter.enabled = FALSE ;
                     self.printReceipt.enabled = TRUE;
                     self.consoleText.text = @"> Printer mode: NON FISCAL";
-                    NSLog(@"%d", i);
                     break;
                 case 0x43:
                     // C - Fiscal mode
@@ -264,13 +285,13 @@
                     self.turnOnPrinter.enabled = FALSE;
                     self.printReceipt.enabled = TRUE;
                     self.consoleText.text = @"> Printer mode: FISCAL";
-                    NSLog(@"%d", i);
                     break;
                 default:
                     break;
             }
             
         } else if ([nameOperation isEqualToString:OID006]) {
+            self.errorCounter = 0;
             // Success!!!
             self.consoleText.text = [NSString stringWithFormat:@"> Receipt was printed SUCCESSFULLY in %@ mode", self.isPrinterStateFiscal ? @"fiscal" : @"non-fiscal"];
             self.printReceipt.enabled = TRUE;
@@ -281,16 +302,12 @@
         }
         
     } else {
+        self.errorCounter++;
+        
         if ([nameOperation isEqualToString:OID001]) {
             self.consoleText.text = @"> Turn On printer";
             [self.printerQ cancelAllOperations];
             self.printerQ = nil;
-        
-//        } else if ([nameOperation isEqualToString:OID005]) {
-//            self.consoleText.text = @"> Receipt was not canceled. Trying again right now";
-//            [self.printerQ cancelAllOperations];
-//            self.printerQ = nil;
-//            [self printerCloseReceipt];
             
         } else {
             self.consoleText.text = @"> Previous operation finished with Error. Trying again right now";
