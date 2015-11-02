@@ -11,9 +11,15 @@
 @interface MEROperationPrinter ()
 @property (nonatomic, assign) BOOL isCompleted;
 @property (nonatomic, strong) MERPrinterDummy *printerDummy;
+//@property (nonatomic, assign, readwrite) BOOL executing;
+//@property (nonatomic, assign) BOOL finished;
 @end
 
 @implementation MEROperationPrinter
+{
+    BOOL executing;
+    BOOL finished;
+}
 
 #pragma mark - Properties
 - (MERPrinterDummy *)printerDummy
@@ -32,6 +38,8 @@
     return _isCompleted;
 }
 
+
+
 - (id)initWithData:(NSData *)data
      operationName:(NSString *)operationName
           delegate:(id<PrinterDummyLink>)delegate
@@ -40,6 +48,9 @@
         self.data = data;
         self.name = operationName;
         self.delegate = delegate;
+        
+        executing = FALSE;
+        finished = FALSE;
     }
     return self;
 }
@@ -49,7 +60,7 @@
 {
     if (!self.isCancelled) {
         [self.printerDummy inputPrinter:self.data completion: ^(NSData *response, NSError *error) {
-            if (!error) {
+            if (!self.isCancelled && !error) {
                 NSLog(@"%@ %@", self.name, response);
                 self.isCompleted = TRUE;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -57,7 +68,7 @@
                 });
                 [self finish];
                 
-            } else {
+            } else if (!self.isCancelled) {
                 //self.error = error;
                 NSLog(@"Error - %@", self.name);
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -85,6 +96,9 @@
     
 //    _isExecuting = NO;
 //    _isFinished = YES;
+    
+    executing = FALSE;
+    finished = TRUE;
     
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];

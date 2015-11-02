@@ -42,6 +42,7 @@
 - (IBAction)printReceipt:(id)sender {
     [self printReceiptAction];
     self.printReceipt.enabled = FALSE;
+    self.consoleText.text = @"> New print of Receipt";
 }
 
 
@@ -78,7 +79,7 @@
     if (!_printerQ) {
         _printerQ = [[NSOperationQueue alloc] init];
         _printerQ.name = @"com.mera.PrinterNSOperationQueue";
-        _printerQ.maxConcurrentOperationCount = 1;
+        //_printerQ.maxConcurrentOperationCount = 1;
         _printerQ.qualityOfService = NSQualityOfServiceBackground;
     }
     return _printerQ;
@@ -93,12 +94,6 @@
     return _error;
 }
 
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-*/
 
 /*
 - (void)viewWillAppear:(BOOL)animated
@@ -188,7 +183,8 @@
     // Lines with items
     NSDictionary *item = @{@"itemName": @"aaa", @"comment": @"Comment template", @"value": @12.50, @"vat": @"A"};
     NSArray *items = @[item, item, item];
-    for (NSDictionary *item in items) {
+    
+    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSData *salesTransactionLineData = [self.stc salesTransactionLine:[[NSProcessInfo processInfo] globallyUniqueString]
                                                              comment1:item[@"comment"]
                                                              comment2:item[@"comment"]
@@ -199,7 +195,7 @@
         
         MEROperationPrinter *operation_salesTransactionLine = [[MEROperationPrinter alloc] initWithData:salesTransactionLineData operationName:OID003 delegate:self];
         
-        if ([item isEqual:items.firstObject]) {
+        if (!idx) {
             // first line of receipt
             [operation_salesTransactionLine addDependency:operation_OpenReceipt];
         } else {
@@ -208,7 +204,7 @@
         }
         
         [operationsBuffer addObject:operation_salesTransactionLine];
-    }
+    }];
     
     // Total
     NSData *totalData = [self.stc transactionTotal:@125.01 error:nil];

@@ -76,17 +76,15 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
 
 - (void)inputPrinter:(NSData *)request completion:(void(^)(NSData *response, NSError *error))completion
 {
-    NSLog(@"Printer got request: %@", request);
+    //NSLog(@"Printer got request: %@", request);
     NSData *output;
     
     NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
     
-    //float delayF = logf(arc4random() % 100);
-    float delayF = logf(arc4random() % 20);
-    int delay = ceilf(delayF);
-    //NSLog(@"%f, %i", delayF, delay);
-    //char i = (delay != 1) ? 0x06 : 0x15;
-    char i = (delay >= 2) ? 0x06 : 0x15; // for errors
+    float delayF = logf(arc4random() % 100); // for seldom errors
+    //float delayF = logf(arc4random() % 20); // for frequently errors
+    //NSLog(@"%f", delayF);
+    char i = (delayF >= 2) ? 0x06 : 0x15;
     
     
     // printer state
@@ -106,7 +104,7 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
         output = [NSData dataWithBytes:&i length:1];
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), self.printerDelayQ, ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayF * NSEC_PER_SEC)), self.printerDelayQ, ^{
         NSError *error = (i == 0x15) ? [NSError errorWithDomain:MERDomainError code:0 userInfo:nil] : nil ;
         completion(output, error);
     });
