@@ -11,7 +11,6 @@
 		1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1730D37F1BDFCD1A001F455C /* MERDetailVC.m */; };
 		175096041BD7B6B00055AFE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096031BD7B6B00055AFE0 /* main.m */; };
 		175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096061BD7B6B00055AFE0 /* AppDelegate.m */; };
-		1750960A1BD7B6B00055AFE0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096091BD7B6B00055AFE0 /* ViewController.m */; };
 		1750960D1BD7B6B00055AFE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1750960B1BD7B6B00055AFE0 /* Main.storyboard */; };
 		1750960F1BD7B6B00055AFE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1750960E1BD7B6B00055AFE0 /* Assets.xcassets */; };
 		175096121BD7B6B00055AFE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 175096101BD7B6B00055AFE0 /* LaunchScreen.storyboard */; };
@@ -23,6 +22,7 @@
 		179D420C1BE0D8E900BF29DA /* MEROperationPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D420B1BE0D8E900BF29DA /* MEROperationPrinter.m */; };
 		179D42101BE0E2CE00BF29DA /* MEROpStartPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */; };
 		17F41BBC1BDA570600EC2655 /* MERErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F41BBB1BDA570600EC2655 /* MERErrors.m */; };
+		5EE368451BEA38D3006F9765 /* MERStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE368441BEA38D3006F9765 /* MERStreamer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +51,6 @@
 		175096031BD7B6B00055AFE0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		175096051BD7B6B00055AFE0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		175096061BD7B6B00055AFE0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		175096081BD7B6B00055AFE0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		175096091BD7B6B00055AFE0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		1750960C1BD7B6B00055AFE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1750960E1BD7B6B00055AFE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		175096111BD7B6B00055AFE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -75,6 +73,8 @@
 		179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEROpStartPrinter.m; path = ../MEROpStartPrinter.m; sourceTree = "<group>"; };
 		17F41BBA1BDA570600EC2655 /* MERErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERErrors.h; sourceTree = "<group>"; };
 		17F41BBB1BDA570600EC2655 /* MERErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERErrors.m; sourceTree = "<group>"; };
+		5EE368431BEA38D3006F9765 /* MERStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERStreamer.h; sourceTree = "<group>"; };
+		5EE368441BEA38D3006F9765 /* MERStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERStreamer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,11 +125,10 @@
 		175096011BD7B6B00055AFE0 /* Fisprint */ = {
 			isa = PBXGroup;
 			children = (
+				5EE368421BEA34A1006F9765 /* Streamer */,
 				179D420D1BE0D8F100BF29DA /* Operations */,
 				179D42061BE0A70800BF29DA /* Printer */,
 				175096381BD7BE120055AFE0 /* Commands */,
-				175096081BD7B6B00055AFE0 /* ViewController.h */,
-				175096091BD7B6B00055AFE0 /* ViewController.m */,
 				1750960B1BD7B6B00055AFE0 /* Main.storyboard */,
 				1730D37E1BDFCD1A001F455C /* MERDetailVC.h */,
 				1730D37F1BDFCD1A001F455C /* MERDetailVC.m */,
@@ -202,6 +201,15 @@
 				179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */,
 			);
 			name = Operations;
+			sourceTree = "<group>";
+		};
+		5EE368421BEA34A1006F9765 /* Streamer */ = {
+			isa = PBXGroup;
+			children = (
+				5EE368431BEA38D3006F9765 /* MERStreamer.h */,
+				5EE368441BEA38D3006F9765 /* MERStreamer.m */,
+			);
+			name = Streamer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,10 +346,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */,
-				1750960A1BD7B6B00055AFE0 /* ViewController.m in Sources */,
 				1722F51C1BE20913001D8610 /* MERPrinterStatusCommands.m in Sources */,
 				1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */,
 				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
+				5EE368451BEA38D3006F9765 /* MERStreamer.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,
 				175096041BD7B6B00055AFE0 /* main.m in Sources */,
 				179D420C1BE0D8E900BF29DA /* MEROperationPrinter.m in Sources */,

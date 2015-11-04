@@ -15,7 +15,8 @@
 
 #define ERROR_COUNTER_MAX 10
 
-@interface MERDetailVC ()
+@interface MERDetailVC () <NSStreamDelegate>
+
 @property (nonatomic, strong) MERSaleTransactionCommands *stc;
 @property (nonatomic, strong) MERPrinterStatusCommands *psc;
 @property (nonatomic, strong) MERPrinterDummy *printerDummy;
@@ -23,6 +24,10 @@
 @property (nonatomic, strong) NSOperationQueue *printerQ;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, assign) NSInteger errorCounter;
+
+@property (nonatomic, strong) NSOutputStream *oStream;
+@property (nonatomic, strong) NSInputStream *iStream;
+@property (nonatomic, strong) NSMutableData *inputBuffer;
 
 @property (weak, nonatomic) IBOutlet UIButton *turnOnPrinter;
 @property (weak, nonatomic) IBOutlet UIButton *printReceipt;
@@ -73,6 +78,21 @@
     return _printerDummy;
 }
 
+- (NSMutableData *)inputBuffer
+{
+    if (!_inputBuffer) {
+        _inputBuffer = [[NSMutableData alloc] init];
+    }
+    return _inputBuffer;
+}
+
+//- (NSOutputStream *)oStream
+//{
+//    if (!_oStream) {
+//        _oStream = [[NSOutputStream alloc] initToMemory];
+//    }
+//    return _oStream;
+//}
 
 - (NSOperationQueue *)printerQ
 {
@@ -311,6 +331,51 @@
             self.printerQ = nil;
             [self cancelBadReceiptAndReprint];
         }
+    }
+}
+
+
+#pragma mark - NSStream
+- (void)createStreamOutput
+{
+    self.oStream = [[NSOutputStream alloc] initToMemory];
+    self.oStream.delegate = self;
+    [_oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_oStream open];
+}
+
+- (void)createStreamInputForData:(NSData *)data
+{
+    self.iStream = [[NSInputStream alloc] initWithData:data];
+    self.iStream.delegate = self;
+    [_iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_iStream open];
+}
+
+
+#pragma mark - NSStreamDelegate
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+{
+    switch (eventCode) {
+        
+        case NSStreamEventHasBytesAvailable:
+        {
+            NSLog(@"inputStream HasByteAvalible: %@", aStream);
+            while ([(NSInputStream *)aStream hasBytesAvailable]) {
+                uint8_t buffer[1024];
+                NSInteger bytesRead = [(NSInputStream *)aStream read:buffer maxLength:1024];
+                
+                if (bytesRead) {
+                    [self.inputBuffer appendBytes:(const void *)buffer length:bytesRead];
+                } else {
+                    NSLog(@"inputStream buffer is empty");
+                }
+            }
+            
+            break;
+        }
+//        default:
+//            break;
     }
 }
 
