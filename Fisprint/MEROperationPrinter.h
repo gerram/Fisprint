@@ -23,11 +23,10 @@
              forOperation:(NSString *)nameOperation;
 @end
 
+
 @interface MEROperationPrinter : NSOperation
 
 @property (nonatomic, weak) id <PrinterDummyLink> delegate;
-
-@property (nonatomic, strong) NSData *data;
 
 - (id)initWithData:(NSData *)data
      operationName:(NSString *)operationName

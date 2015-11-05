@@ -7,12 +7,12 @@
 //
 
 #import "MEROperationPrinter.h"
+#import "MERInnerOperation.h"
 
 @interface MEROperationPrinter ()
 @property (nonatomic, assign) BOOL isCompleted;
 @property (nonatomic, strong) MERPrinterDummy *printerDummy;
-//@property (nonatomic, assign, readwrite) BOOL executing;
-//@property (nonatomic, assign) BOOL finished;
+@property (nonatomic, strong) NSData *data;
 @end
 
 @implementation MEROperationPrinter
@@ -39,13 +39,13 @@
 }
 
 
-
 - (id)initWithData:(NSData *)data
      operationName:(NSString *)operationName
           delegate:(id<PrinterDummyLink>)delegate
 {
     if (self = [self init]) {
         self.data = data;
+        //[self.streamData appendData:data];
         self.name = operationName;
         self.delegate = delegate;
         
@@ -59,23 +59,46 @@
 - (void)main
 {
     if (!self.isCancelled) {
-        [self.printerDummy inputPrinter:self.data completion: ^(NSData *response, NSError *error) {
-            if (!self.isCancelled && !error) {
-                NSLog(@"%@ %@", self.name, response);
-                self.isCompleted = TRUE;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_delegate operationResponse:response WithError:nil forOperation:self.name];
-                });
-                [self finish];
-                
-            } else if (!self.isCancelled) {
-                //self.error = error;
-                NSLog(@"Error - %@", self.name);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_delegate operationResponse:nil WithError:error forOperation:self.name];
-                });
-            }
-        }];
+        NSOperationQueue *innerQ = [[NSOperationQueue alloc] init];
+        innerQ.name = @"com.mera.streamerNSOperationQueue";
+        innerQ.qualityOfService = NSQualityOfServiceBackground;
+        
+        // streamer - stream our data to streamToMemory
+        MERInnerOperation *operationOutputStream = [[MERInnerOperation alloc] initWithData:self.data];
+        
+        //MERInnerOperation *operationInputStream = [[MERInnerOperation alloc] init];
+        //[operationInputStream addDependency:operationOutputStream];
+        
+        
+        
+        // !!! We dont have device and will send to virtual data
+        // data to virtual printer
+        NSOperation *operationSendVirtualPrinter = [[NSOperation alloc] init];
+        operationSendVirtualPrinter.completionBlock = ^{
+            [self.printerDummy inputPrinter:self.data completion: ^(NSData *response, NSError *error) {
+                if (!self.isCancelled && !error) {
+                    NSLog(@"%@ %@", self.name, response);
+                    self.isCompleted = TRUE;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_delegate operationResponse:response WithError:nil forOperation:self.name];
+                    });
+                    [self finish];
+                    
+                } else if (!self.isCancelled) {
+                    //self.error = error;
+                    NSLog(@"Error - %@", self.name);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_delegate operationResponse:nil WithError:error forOperation:self.name];
+                    });
+                }
+            }];    
+        };
+        
+        [operationSendVirtualPrinter addDependency:operationOutputStream];
+        
+        
+        
+        [innerQ addOperations:@[operationOutputStream, operationSendVirtualPrinter] waitUntilFinished:FALSE];
     }
 }
 
@@ -103,5 +126,6 @@
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
 }
+
 
 @end

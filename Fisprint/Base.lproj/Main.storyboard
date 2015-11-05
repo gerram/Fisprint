@@ -105,14 +105,6 @@
                                     <action selector="printReceipt:" destination="rRo-sw-iPR" eventType="touchUpInside" id="MXw-h7-lbf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I85-Kq-MYR">
-                                <rect key="frame" x="113" y="352" width="46" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="streamTestAction:" destination="rRo-sw-iPR" eventType="touchUpInside" id="Msx-Av-VkH"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

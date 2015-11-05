@@ -81,8 +81,8 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
     
     NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
     
-    float delayF = logf(arc4random() % 100); // for seldom errors
-    //float delayF = logf(arc4random() % 20); // for frequently errors
+    //float delayF = logf(arc4random() % 100); // for seldom errors
+    float delayF = logf(arc4random() % 20); // for frequently errors
     //NSLog(@"%f", delayF);
     char i = (delayF >= 2) ? 0x06 : 0x15;
     

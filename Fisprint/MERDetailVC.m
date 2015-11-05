@@ -7,7 +7,7 @@
 //
 
 #import "MERDetailVC.h"
-#import "MERPrinterDummy.h"
+//#import "MERPrinterDummy.h"
 #import "MEROperationPrinter.h"
 
 #import "MERSaleTransactionCommands.h"
@@ -15,21 +15,15 @@
 
 #define ERROR_COUNTER_MAX 10
 
-@interface MERDetailVC () <NSStreamDelegate>
+@interface MERDetailVC ()
 
 @property (nonatomic, strong) MERSaleTransactionCommands *stc;
 @property (nonatomic, strong) MERPrinterStatusCommands *psc;
-@property (nonatomic, strong) MERPrinterDummy *printerDummy;
+//@property (nonatomic, strong) MERPrinterDummy *printerDummy;
 @property (nonatomic, assign) BOOL isPrinterStateFiscal;
 @property (nonatomic, strong) NSOperationQueue *printerQ;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, assign) NSInteger errorCounter;
-
-@property (nonatomic, strong) NSOutputStream *oStream;
-@property (nonatomic, strong) NSInputStream *iStream;
-@property (nonatomic, strong) NSMutableData *streamData;
-@property (nonatomic, strong) NSData *streamedData;
-@property (nonatomic, assign) unsigned long streamDataIndexOffset;
 
 @property (weak, nonatomic) IBOutlet UIButton *turnOnPrinter;
 @property (weak, nonatomic) IBOutlet UIButton *printReceipt;
@@ -72,31 +66,16 @@
 }
 
 
-- (MERPrinterDummy *)printerDummy
-{
-    if (!_printerDummy) {
-        _printerDummy = [MERPrinterDummy sharedManager];
-    }
-    return _printerDummy;
-}
-
-- (NSMutableData *)streamData
-{
-    if (!_streamData) {
-        _streamData = [[NSMutableData alloc] init];
-    }
-    return _streamData;
-}
-
-
-
-//- (NSOutputStream *)oStream
+//- (MERPrinterDummy *)printerDummy
 //{
-//    if (!_oStream) {
-//        _oStream = [[NSOutputStream alloc] initToMemory];
+//    if (!_printerDummy) {
+//        _printerDummy = [MERPrinterDummy sharedManager];
 //    }
-//    return _oStream;
+//    return _printerDummy;
 //}
+
+
+
 
 - (NSOperationQueue *)printerQ
 {
@@ -338,144 +317,13 @@
     }
 }
 
-
-#pragma mark - NSStream
 - (IBAction)streamTestAction:(id)sender {
-    NSString *testString = @"Testo 777";
-    
-    [self.streamData appendBytes:&testString length:sizeof(testString)];
-    [self createStreamOutput];
-    
+//    NSString *testString = @"Testo 777";
+//    [self.streamData appendBytes:&testString length:sizeof(testString)];
+//    [self createStreamOutput];
 }
 
 
-- (void)createStreamOutput
-{
-    self.oStream = [[NSOutputStream alloc] initToMemory];
-    self.oStream.delegate = self;
-    [_oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_oStream open];
-}
-
-- (void)createStreamInputForData:(NSData *)data
-{
-    self.iStream = [[NSInputStream alloc] initWithData:data];
-    self.iStream.delegate = self;
-    [_iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_iStream open];
-}
-
-- (void)processMemoryToPrinter
-{
-    NSLog(@"StreamedData is: %@", _streamedData);
-    
-    // tmp
-    [self createStreamInputForData:_streamedData];
-}
-
-- (void)processInputData
-{
-    NSLog(@"StreamData is: %@", self.streamData);
-}
-
-- (void)processStreamError:(NSStream *)aStream
-{
-    
-}
-
-
-#pragma mark - NSStreamDelegate
-- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
-{
-    switch (eventCode) {
-            
-        case NSStreamEventHasSpaceAvailable:
-        {
-            NSLog(@"outputStream HasSpaceAvailable");
-            uint8_t *readBytes = (uint8_t *)[self.streamData mutableBytes];
-            readBytes += _streamDataIndexOffset;
-            NSUInteger data_len = [_streamData length];
-            NSUInteger len = (data_len - _streamDataIndexOffset >= 1024) ? 1024 : (data_len -  _streamDataIndexOffset);
-            
-            uint8_t buffer[len];
-            (void)memcpy(buffer, readBytes, len);
-            len = [(NSOutputStream *)aStream write:(const uint8_t *)buffer maxLength:len];
-            self.streamDataIndexOffset += len;
-            
-            break;
-        }
-            
-        case NSStreamEventHasBytesAvailable:
-        {
-            NSLog(@"inputStream HasByteAvalible: %@", aStream);
-            while ([(NSInputStream *)aStream hasBytesAvailable]) {
-                uint8_t buffer[1024];
-                NSInteger bytesRead = [(NSInputStream *)aStream read:buffer maxLength:1024];
-                
-                if (bytesRead) {
-                    [self.streamData appendBytes:(const void *)buffer length:bytesRead];
-                } else {
-                    NSLog(@"inputStream buffer is empty");
-                }
-            }
-            
-            break;
-        }
-            
-        case NSStreamEventEndEncountered:
-        {
-            if (aStream == _oStream) {
-                self.streamedData = nil;
-                self.streamedData = [aStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
-                
-                if (![_streamedData length]) {
-                    NSLog(@"We get nothing in to memory from outputStream!");
-                } else {
-                    [self processMemoryToPrinter];
-                }
-                self.streamData = nil;
-                
-            } else if (aStream == _iStream) {
-                if (![self.streamData length]) {
-                    NSLog(@"We get nothing from inputStream!");
-                } else {
-                    [self processInputData];
-                }
-                self.streamData = nil;
-                self.streamDataIndexOffset = 0;
-            }
-            
-            [aStream close];
-            [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            aStream = nil;
-            
-            break;
-        }
-            
-        case NSStreamEventErrorOccurred:
-        {
-            NSLog(@"stream error");
-            
-            NSError *error = [aStream streamError];
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Stream Alert"
-                                                                           message:[NSString stringWithFormat:@"Error: %li", (long)[error code]]                                                                   preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-            [alert addAction:defaultAction];
-            [self presentViewController:alert animated:TRUE completion:nil];
-            
-            [self processStreamError:aStream];
-            
-            [aStream close];
-            [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            aStream = nil;
-            
-            break;
-        }
-            
-        default:
-            break;
-    }
-}
 
 
 @end
