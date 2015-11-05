@@ -46,6 +46,7 @@
 - (id)initWithData:(NSData *)data
 {
     if (self = [self init]) {
+        _streamData = nil;
         [self.streamData appendData:data];
         executing = FALSE;
         finished = FALSE;
@@ -98,18 +99,22 @@
 #pragma mark - NSStream
 - (void)createStreamOutput
 {
-    self.oStream = [[NSOutputStream alloc] initToMemory];
-    self.oStream.delegate = self;
-    [self.oStream scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.oStream open];
+    _oStream = [[NSOutputStream alloc] initToMemory];
+    _oStream.delegate = self;
+    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+    [_oStream scheduleInRunLoop:currentRunLoop forMode:NSDefaultRunLoopMode];
+    [_oStream open];
+    [currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 }
 
 - (void)createStreamInputForData:(NSData *)data
 {
-    self.iStream = [[NSInputStream alloc] initWithData:data];
-    self.iStream.delegate = self;
-    [self.iStream scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.iStream open];
+    _iStream = [[NSInputStream alloc] initWithData:data];
+    _iStream.delegate = self;
+    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+    [_iStream scheduleInRunLoop:currentRunLoop forMode:NSDefaultRunLoopMode];
+    [_iStream open];
+    [currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 }
 
 - (void)processMemoryToPrinter
@@ -117,7 +122,7 @@
     NSLog(@">> StreamedData to printer is: %@", self.streamedData);
     //self.isCompleted = TRUE;
     //[self finish];
-    NSString *response = @"I'm response from printer";
+    NSString *response = [NSString stringWithFormat:@"%u", arc4random() % 1000];
     [self createStreamInputForData:[NSData dataWithBytes:&response length:sizeof(response)]];
  }
 
