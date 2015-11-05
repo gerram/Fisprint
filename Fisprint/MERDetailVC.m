@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSOutputStream *oStream;
 @property (nonatomic, strong) NSInputStream *iStream;
 @property (nonatomic, strong) NSMutableData *streamData;
+@property (nonatomic, strong) NSData *streamedData;
 @property (nonatomic, assign) unsigned long streamDataIndexOffset;
 
 @property (weak, nonatomic) IBOutlet UIButton *turnOnPrinter;
@@ -86,6 +87,8 @@
     }
     return _streamData;
 }
+
+
 
 //- (NSOutputStream *)oStream
 //{
@@ -337,10 +340,17 @@
 
 
 #pragma mark - NSStream
+- (IBAction)streamTestAction:(id)sender {
+    NSString *testString = @"Testo 777";
+    
+    [self.streamData appendBytes:&testString length:sizeof(testString)];
+    [self createStreamOutput];
+    
+}
+
+
 - (void)createStreamOutput
 {
-    self.streamData = nil;
-    
     self.oStream = [[NSOutputStream alloc] initToMemory];
     self.oStream.delegate = self;
     [_oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -349,8 +359,6 @@
 
 - (void)createStreamInputForData:(NSData *)data
 {
-    self.streamData = nil;
-    
     self.iStream = [[NSInputStream alloc] initWithData:data];
     self.iStream.delegate = self;
     [_iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -359,10 +367,18 @@
 
 - (void)processMemoryToPrinter
 {
+    NSLog(@"StreamedData is: %@", _streamedData);
     
+    // tmp
+    [self createStreamInputForData:_streamedData];
 }
 
 - (void)processInputData
+{
+    NSLog(@"StreamData is: %@", self.streamData);
+}
+
+- (void)processStreamError:(NSStream *)aStream
 {
     
 }
@@ -409,14 +425,15 @@
         case NSStreamEventEndEncountered:
         {
             if (aStream == _oStream) {
-                self.streamData = [aStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
+                self.streamedData = nil;
+                self.streamedData = [aStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
                 
-                if (![self.streamData length]) {
+                if (![_streamedData length]) {
                     NSLog(@"We get nothing in to memory from outputStream!");
                 } else {
                     [self processMemoryToPrinter];
                 }
-                
+                self.streamData = nil;
                 
             } else if (aStream == _iStream) {
                 if (![self.streamData length]) {
@@ -424,6 +441,8 @@
                 } else {
                     [self processInputData];
                 }
+                self.streamData = nil;
+                self.streamDataIndexOffset = 0;
             }
             
             [aStream close];
@@ -432,8 +451,29 @@
             
             break;
         }
-//        default:
-//            break;
+            
+        case NSStreamEventErrorOccurred:
+        {
+            NSLog(@"stream error");
+            
+            NSError *error = [aStream streamError];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Stream Alert"
+                                                                           message:[NSString stringWithFormat:@"Error: %li", (long)[error code]]                                                                   preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:TRUE completion:nil];
+            
+            [self processStreamError:aStream];
+            
+            [aStream close];
+            [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            aStream = nil;
+            
+            break;
+        }
+            
+        default:
+            break;
     }
 }
 
