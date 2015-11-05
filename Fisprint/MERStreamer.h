@@ -10,4 +10,6 @@
 
 @interface MERStreamer : NSObject
 
+@property struct Direction;
+
 @end

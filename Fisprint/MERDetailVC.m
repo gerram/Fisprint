@@ -27,7 +27,8 @@
 
 @property (nonatomic, strong) NSOutputStream *oStream;
 @property (nonatomic, strong) NSInputStream *iStream;
-@property (nonatomic, strong) NSMutableData *inputBuffer;
+@property (nonatomic, strong) NSMutableData *streamData;
+@property (nonatomic, assign) unsigned long streamDataIndexOffset;
 
 @property (weak, nonatomic) IBOutlet UIButton *turnOnPrinter;
 @property (weak, nonatomic) IBOutlet UIButton *printReceipt;
@@ -78,12 +79,12 @@
     return _printerDummy;
 }
 
-- (NSMutableData *)inputBuffer
+- (NSMutableData *)streamData
 {
-    if (!_inputBuffer) {
-        _inputBuffer = [[NSMutableData alloc] init];
+    if (!_streamData) {
+        _streamData = [[NSMutableData alloc] init];
     }
-    return _inputBuffer;
+    return _streamData;
 }
 
 //- (NSOutputStream *)oStream
@@ -338,6 +339,8 @@
 #pragma mark - NSStream
 - (void)createStreamOutput
 {
+    self.streamData = nil;
+    
     self.oStream = [[NSOutputStream alloc] initToMemory];
     self.oStream.delegate = self;
     [_oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -346,10 +349,22 @@
 
 - (void)createStreamInputForData:(NSData *)data
 {
+    self.streamData = nil;
+    
     self.iStream = [[NSInputStream alloc] initWithData:data];
     self.iStream.delegate = self;
     [_iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [_iStream open];
+}
+
+- (void)processMemoryToPrinter
+{
+    
+}
+
+- (void)processInputData
+{
+    
 }
 
 
@@ -357,7 +372,23 @@
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
     switch (eventCode) {
-        
+            
+        case NSStreamEventHasSpaceAvailable:
+        {
+            NSLog(@"outputStream HasSpaceAvailable");
+            uint8_t *readBytes = (uint8_t *)[self.streamData mutableBytes];
+            readBytes += _streamDataIndexOffset;
+            NSUInteger data_len = [_streamData length];
+            NSUInteger len = (data_len - _streamDataIndexOffset >= 1024) ? 1024 : (data_len -  _streamDataIndexOffset);
+            
+            uint8_t buffer[len];
+            (void)memcpy(buffer, readBytes, len);
+            len = [(NSOutputStream *)aStream write:(const uint8_t *)buffer maxLength:len];
+            self.streamDataIndexOffset += len;
+            
+            break;
+        }
+            
         case NSStreamEventHasBytesAvailable:
         {
             NSLog(@"inputStream HasByteAvalible: %@", aStream);
@@ -366,7 +397,7 @@
                 NSInteger bytesRead = [(NSInputStream *)aStream read:buffer maxLength:1024];
                 
                 if (bytesRead) {
-                    [self.inputBuffer appendBytes:(const void *)buffer length:bytesRead];
+                    [self.streamData appendBytes:(const void *)buffer length:bytesRead];
                 } else {
                     NSLog(@"inputStream buffer is empty");
                 }
@@ -374,9 +405,37 @@
             
             break;
         }
+            
+        case NSStreamEventEndEncountered:
+        {
+            if (aStream == _oStream) {
+                self.streamData = [aStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
+                
+                if (![self.streamData length]) {
+                    NSLog(@"We get nothing in to memory from outputStream!");
+                } else {
+                    [self processMemoryToPrinter];
+                }
+                
+                
+            } else if (aStream == _iStream) {
+                if (![self.streamData length]) {
+                    NSLog(@"We get nothing from inputStream!");
+                } else {
+                    [self processInputData];
+                }
+            }
+            
+            [aStream close];
+            [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            aStream = nil;
+            
+            break;
+        }
 //        default:
 //            break;
     }
 }
+
 
 @end
