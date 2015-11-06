@@ -25,13 +25,6 @@
                                     <action selector="startPrinter:" destination="rRo-sw-iPR" eventType="touchUpInside" id="PSy-jS-brd"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rKn-1x-1M7">
-                                <rect key="frame" x="183" y="20" width="113" height="30"/>
-                                <animations/>
-                                <connections>
-                                    <action selector="startPrinter:" destination="rRo-sw-iPR" eventType="touchUpInside" id="5lv-SP-E3p"/>
-                                </connections>
-                            </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="&gt; Printer mode: UNKNOWN" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2N7-3p-Tw7">
                                 <rect key="frame" x="0.0" y="500" width="600" height="100"/>
                                 <animations/>

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		171C6D811BEB719B006B1068 /* MERInnerOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 171C6D801BEB719B006B1068 /* MERInnerOperation.m */; };
 		1722F51C1BE20913001D8610 /* MERPrinterStatusCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1722F51B1BE20913001D8610 /* MERPrinterStatusCommands.m */; };
 		1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1730D37F1BDFCD1A001F455C /* MERDetailVC.m */; };
 		175096041BD7B6B00055AFE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 175096031BD7B6B00055AFE0 /* main.m */; };
@@ -44,8 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		171C6D7F1BEB719B006B1068 /* MERInnerOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERInnerOperation.h; sourceTree = "<group>"; };
-		171C6D801BEB719B006B1068 /* MERInnerOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERInnerOperation.m; sourceTree = "<group>"; };
 		1722F51A1BE20913001D8610 /* MERPrinterStatusCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERPrinterStatusCommands.h; sourceTree = "<group>"; };
 		1722F51B1BE20913001D8610 /* MERPrinterStatusCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERPrinterStatusCommands.m; sourceTree = "<group>"; };
 		1730D37E1BDFCD1A001F455C /* MERDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERDetailVC.h; sourceTree = "<group>"; };
@@ -202,8 +199,6 @@
 			children = (
 				179D420A1BE0D8E900BF29DA /* MEROperationPrinter.h */,
 				179D420B1BE0D8E900BF29DA /* MEROperationPrinter.m */,
-				171C6D7F1BEB719B006B1068 /* MERInnerOperation.h */,
-				171C6D801BEB719B006B1068 /* MERInnerOperation.m */,
 				179D420E1BE0E2CE00BF29DA /* MEROpStartPrinter.h */,
 				179D420F1BE0E2CE00BF29DA /* MEROpStartPrinter.m */,
 			);
@@ -355,7 +350,6 @@
 				1730D3801BDFCD1A001F455C /* MERDetailVC.m in Sources */,
 				1722F51C1BE20913001D8610 /* MERPrinterStatusCommands.m in Sources */,
 				1750963B1BD7CD010055AFE0 /* MERSaleTransactionCommands.m in Sources */,
-				171C6D811BEB719B006B1068 /* MERInnerOperation.m in Sources */,
 				175096371BD7BE030055AFE0 /* MERBaseCommands.m in Sources */,
 				5EE368451BEA38D3006F9765 /* MERStreamer.m in Sources */,
 				175096071BD7B6B00055AFE0 /* AppDelegate.m in Sources */,

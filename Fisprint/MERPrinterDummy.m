@@ -81,8 +81,8 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
     
     NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
     
-    //float delayF = logf(arc4random() % 100); // for seldom errors
-    float delayF = logf(arc4random() % 20); // for frequently errors
+    float delayF = logf(arc4random() % 100); // for seldom errors
+    //float delayF = logf(arc4random() % 20); // for frequently errors
     //NSLog(@"%f", delayF);
     char i = (delayF >= 2) ? 0x06 : 0x15;
     
@@ -110,37 +110,4 @@ typedef NS_ENUM(NSUInteger, PrinterState) {
     });
 }
 
-// Print without delay
-//- (NSData *)inputPrinter:(NSData *)request
-//{
-//    //NSLog(@"Printer got request: %@", request);
-//    NSData *output;
-//    
-//    NSData *queryPrinterExtendedStatusTemplate = [self.psc queryPrinterExtendedStatus];
-//    
-//    //float delayF = logf(arc4random() % 100); // for seldom errors
-//    float delayF = logf(arc4random() % 20); // for frequently errors
-//    //NSLog(@"%f", delayF);
-//    char i = (delayF >= 2) ? 0x06 : 0x15;
-//    
-//    
-//    // printer state
-//    if ([request isEqualToData:queryPrinterExtendedStatusTemplate]) {
-//        if (self.state == PrinterStateIdle) {
-//            char chA = 0x41;
-//            output = [NSData dataWithBytes:&chA length:1];
-//        } else if (self.state == PrinterStateNonFiscal) {
-//            char chB = 0x42;
-//            output = [NSData dataWithBytes:&chB length:1];
-//        } else if (self.state == PrinterStateFiscal){
-//            char chC = 0x43;
-//            output = [NSData dataWithBytes:&chC length:1];
-//        }
-//        
-//    } else {
-//        output = [NSData dataWithBytes:&i length:1];
-//    }
-//    
-//        NSError *error = (i == 0x15) ? [NSError errorWithDomain:MERDomainError code:0 userInfo:nil] : nil ;
-//}
 @end

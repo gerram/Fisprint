@@ -238,8 +238,10 @@
 {
     NSData *queryPrinterStateData = [self.psc queryPrinterExtendedStatus];
     MEROperationPrinter *printerState = [[MEROperationPrinter alloc] initWithData:queryPrinterStateData operationName:OID001 delegate:self];
-    [printerState start];
+    //[printerState start];
     self.consoleText.text = @"> Checking printer...";
+    [self.printerQ addOperation:printerState];
+    self.turnOnPrinter.enabled = FALSE;
 }
 
 
@@ -261,7 +263,9 @@
              forOperation:(NSString *)nameOperation
 {
     if (!error) {
+        
         if ([nameOperation isEqualToString:OID001]) {
+            self.errorCounter = 0;
             // Check printer status
             int i = (int)*(char*)([data bytes]);
             switch (i) {
@@ -307,6 +311,7 @@
             self.consoleText.text = @"> Turn On printer";
             [self.printerQ cancelAllOperations];
             self.printerQ = nil;
+            self.turnOnPrinter.enabled = TRUE;
             
         } else {
             self.consoleText.text = @"> Previous operation finished with Error. Trying again right now";
@@ -317,11 +322,6 @@
     }
 }
 
-- (IBAction)streamTestAction:(id)sender {
-//    NSString *testString = @"Testo 777";
-//    [self.streamData appendBytes:&testString length:sizeof(testString)];
-//    [self createStreamOutput];
-}
 
 
 

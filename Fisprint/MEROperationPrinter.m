@@ -7,7 +7,7 @@
 //
 
 #import "MEROperationPrinter.h"
-#import "MERInnerOperation.h"
+#import "MERErrors.h"
 
 @interface MEROperationPrinter () <NSStreamDelegate>
 @property (nonatomic, assign) BOOL isCompleted;
@@ -83,16 +83,14 @@
 - (void)main
 {
     if (!self.isCancelled) {
-        //NSOperationQueue *innerQ = [[NSOperationQueue alloc] init];
-        //innerQ.name = @"com.mera.streamerNSOperationQueue";
-        //innerQ.qualityOfService = NSQualityOfServiceBackground;
         
-        // streamer - stream our data to streamToMemory
-        //MERInnerOperation *operationOutputStream = [[MERInnerOperation alloc] initWithData:self.data];
-        
-        //MERInnerOperation *operationInputStream = [[MERInnerOperation alloc] init];
-        //[operationInputStream addDependency:operationOutputStream];
-        
+        if ([self.streamData length]) {
+            [self createStreamOutput];
+            
+        } else {
+            NSString *response = @"I'm response from printer";
+            [self createStreamInputForData:[NSData dataWithBytes:&response length:sizeof(response)]];
+        }
         
         /*
         // !!! We dont have device and will send to virtual data
@@ -117,19 +115,7 @@
                 }
             }];    
         };
-        
-        [operationSendVirtualPrinter addDependency:operationOutputStream];
         */
-        
-        //[innerQ addOperations:@[operationOutputStream] waitUntilFinished:FALSE];
-        
-        if ([self.streamData length]) {
-            [self createStreamOutput];
-            
-        } else {
-            NSString *response = @"I'm response from printer";
-            [self createStreamInputForData:[NSData dataWithBytes:&response length:sizeof(response)]];
-        }
     }
 }
 
@@ -188,31 +174,16 @@
     //[self finish];
     
     MEROperationPrinter * __weak weakSelf = self;
-    [self.printerDummy inputPrinter:_streamedData completion: ^(NSData *response, NSError *error) {
+    [weakSelf.printerDummy inputPrinter:weakSelf.streamedData completion: ^(NSData *response, NSError *error) {
         if (!error) {
-            //NSLog(@"%@ %@", self.name, response);
-            //self.isCompleted = TRUE;
-            //dispatch_async(dispatch_get_main_queue(), ^{
-            //    [_delegate operationResponse:response WithError:nil forOperation:self.name];
-            //});
-            //[self finish];
-            
-            [weakSelf createStreamInputForData:[NSData dataWithBytes:&response length:sizeof(response)]];
+            NSLog(@"%@ %@", self.name, response);
+            [weakSelf createStreamInputForData:response];
             
         } else {
-            //self.error = error;
-            //NSLog(@"Error - %@", self.name);
-            //dispatch_async(dispatch_get_main_queue(), ^{
-            //    [_delegate operationResponse:nil WithError:error forOperation:self.name];
-            //});
+            NSLog(@"%@ === ERROR ===", self.name);
+            [weakSelf processInputDataError:error];
         }
     }];
-    
-    
-    
-    
-    //NSString *response = [NSString stringWithFormat:@"%u", arc4random() % 1000];
-    //[self createStreamInputForData:[NSData dataWithBytes:&response length:sizeof(response)]];
 }
 
 - (void)processInputData
@@ -220,14 +191,32 @@
     NSLog(@"<< StreamData from printer is: %@", self.inputStreamData);
     self.isCompleted = TRUE;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_delegate operationResponse:_inputStreamData WithError:nil forOperation:self.name];
+        [_delegate operationResponse:self.inputStreamData WithError:nil forOperation:self.name];
+    });
+    [self finish];
+}
+
+- (void)processInputDataError:(NSError *)error
+{
+    NSLog(@"<< StreamData from printer is: nil with error: %@", error);
+    [self.iStream close];
+    [self.iStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    self.iStream = nil;
+    self.isCompleted = TRUE;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate operationResponse:nil WithError:error forOperation:self.name];
     });
     [self finish];
 }
 
 - (void)processStreamError:(NSStream *)aStream
 {
-    
+    self.isCompleted = TRUE;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSError *error = [NSError errorWithDomain:MERDomainError code:0 userInfo:nil];
+        [_delegate operationResponse:nil WithError:error forOperation:self.name];
+    });
+    [self finish];
 }
 
 
