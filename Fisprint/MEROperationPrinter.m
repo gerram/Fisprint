@@ -63,6 +63,9 @@
         innerQ.name = @"com.mera.streamerNSOperationQueue";
         innerQ.qualityOfService = NSQualityOfServiceBackground;
         
+        
+        
+        
         // streamer - stream our data to streamToMemory
         MERInnerOperation *operationOutputStream = [[MERInnerOperation alloc] initWithData:self.data];
         
@@ -70,7 +73,7 @@
         //[operationInputStream addDependency:operationOutputStream];
         
         
-        
+        /*
         // !!! We dont have device and will send to virtual data
         // data to virtual printer
         NSOperation *operationSendVirtualPrinter = [[NSOperation alloc] init];
@@ -95,10 +98,11 @@
         };
         
         [operationSendVirtualPrinter addDependency:operationOutputStream];
+        */
         
         
         
-        [innerQ addOperations:@[operationOutputStream, operationSendVirtualPrinter] waitUntilFinished:FALSE];
+        [innerQ addOperations:@[operationOutputStream] waitUntilFinished:FALSE];
     }
 }
 

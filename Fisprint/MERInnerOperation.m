@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSInputStream *iStream;
 @property (nonatomic, strong) NSMutableData *streamData;
 @property (nonatomic, strong) NSData *streamedData;
+@property (nonatomic, strong) NSMutableData *inputStreamData;
 @property (nonatomic, assign) NSUInteger streamDataIndexOffset;
 @end
 
@@ -40,6 +41,14 @@
         _streamData = [[NSMutableData alloc] init];
     }
     return _streamData;
+}
+
+- (NSMutableData *)inputStreamData
+{
+    if (!_inputStreamData) {
+        _inputStreamData = [[NSMutableData alloc] init];
+    }
+    return _inputStreamData;
 }
 
 
@@ -104,7 +113,7 @@
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [_oStream scheduleInRunLoop:currentRunLoop forMode:NSDefaultRunLoopMode];
     [_oStream open];
-    [currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    [currentRunLoop run];
 }
 
 - (void)createStreamInputForData:(NSData *)data
@@ -114,7 +123,7 @@
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [_iStream scheduleInRunLoop:currentRunLoop forMode:NSDefaultRunLoopMode];
     [_iStream open];
-    [currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    [currentRunLoop run];
 }
 
 - (void)processMemoryToPrinter
@@ -128,7 +137,7 @@
 
 - (void)processInputData
 {
-    NSLog(@"<< StreamData from printer is: %@", self.streamData);
+    NSLog(@"<< StreamData from printer is: %@", self.inputStreamData);
     self.isCompleted = TRUE;
     [self finish];
 }
@@ -147,8 +156,7 @@
         case NSStreamEventHasSpaceAvailable:
         {
             //NSLog(@"outputStream HasSpaceAvailable");
-            //uint8_t *readBytes = (uint8_t *)[self.streamData mutableBytes];
-            uint8_t *readBytes = (uint8_t *)[self.streamData bytes];
+            uint8_t *readBytes = (uint8_t *)[self.streamData mutableBytes];
             readBytes += self.streamDataIndexOffset;
             NSUInteger data_len = [_streamData length];
             NSUInteger len = (data_len - self.streamDataIndexOffset >= 1024) ? 1024 : (data_len -  self.streamDataIndexOffset);
@@ -169,7 +177,7 @@
                 NSInteger bytesRead = [(NSInputStream *)aStream read:buffer maxLength:1024];
                 
                 if (bytesRead) {
-                    [self.streamData appendBytes:(const void *)buffer length:bytesRead];
+                    [self.inputStreamData appendBytes:(const void *)buffer length:bytesRead];
                 } else {
                     NSLog(@"inputStream buffer is empty");
                 }
@@ -192,12 +200,12 @@
                 self.streamData = nil;
                 
             } else if (aStream == _iStream) {
-                if (![self.streamData length]) {
+                if (![self.inputStreamData length]) {
                     NSLog(@"We get nothing from inputStream!");
                 } else {
                     [self processInputData];
                 }
-                self.streamData = nil;
+                self.inputStreamData = nil;
                 self.streamDataIndexOffset = 0;
             }
             

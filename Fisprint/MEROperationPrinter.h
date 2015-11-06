@@ -16,12 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MERPrinterDummy.h"
-
-@protocol PrinterDummyLink <NSObject>
-- (void)operationResponse:(NSData *)data
-                WithError:(NSError *)error
-             forOperation:(NSString *)nameOperation;
-@end
+#import "PrinterDummyLink.h"
 
 
 @interface MEROperationPrinter : NSOperation

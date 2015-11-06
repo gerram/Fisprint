@@ -78,6 +78,7 @@
 		17F41BBB1BDA570600EC2655 /* MERErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERErrors.m; sourceTree = "<group>"; };
 		5EE368431BEA38D3006F9765 /* MERStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MERStreamer.h; sourceTree = "<group>"; };
 		5EE368441BEA38D3006F9765 /* MERStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MERStreamer.m; sourceTree = "<group>"; };
+		5EE368461BEC67D2006F9765 /* PrinterDummyLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrinterDummyLink.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,7 +131,7 @@
 			children = (
 				5EE368421BEA34A1006F9765 /* Streamer */,
 				179D420D1BE0D8F100BF29DA /* Operations */,
-				179D42061BE0A70800BF29DA /* Printer */,
+				179D42061BE0A70800BF29DA /* Printers */,
 				175096381BD7BE120055AFE0 /* Commands */,
 				1750960B1BD7B6B00055AFE0 /* Main.storyboard */,
 				1730D37E1BDFCD1A001F455C /* MERDetailVC.h */,
@@ -186,13 +187,14 @@
 			name = Commands;
 			sourceTree = "<group>";
 		};
-		179D42061BE0A70800BF29DA /* Printer */ = {
+		179D42061BE0A70800BF29DA /* Printers */ = {
 			isa = PBXGroup;
 			children = (
 				179D42071BE0A74700BF29DA /* MERPrinterDummy.h */,
 				179D42081BE0A74700BF29DA /* MERPrinterDummy.m */,
+				5EE368461BEC67D2006F9765 /* PrinterDummyLink.h */,
 			);
-			name = Printer;
+			name = Printers;
 			sourceTree = "<group>";
 		};
 		179D420D1BE0D8F100BF29DA /* Operations */ = {
